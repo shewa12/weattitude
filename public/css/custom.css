@@ -1,0 +1,7 @@
+.notification {
+    position: fixed;
+    top: 3em;
+    left: 20%;
+    right: 20%;
+    z-index: 1051; /* must be larger than .modal */
+}

@@ -1,0 +1,7 @@
+link: http://www.expertphp.in/article/generate-pdf-from-html-in-php-laravel-using-dompdf-library
+
+1) command to install dompdf: composer require barryvdh/laravel-dompdf
+2) set provider in config/app : Barryvdh\DomPDF\ServiceProvider::class,
+3) set aliase in config/app:  'PDF' => Barryvdh\DomPDF\Facade::class,
+4) in class use PDF and use like that:         $pdf = PDF::loadView('admin/htmltopdfview');
+        				       return $pdf->download('admin/htmltopdfview');

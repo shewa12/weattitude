@@ -1,0 +1,37 @@
+ #pointer {  height: 40px; position: relative; background: #1ABB9C; margin-bottom: 10px; margin-top: -10px;margin-left: -20px;} 
+ #pointer:after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 0; border-left: 20px solid white; border-top: 20px solid transparent; border-bottom: 20px solid transparent; } 
+
+ #pointer p{ color: white; padding: 10px;}
+ .text{
+    padding: 10px;
+    font-size: 18px;
+    text-align: justify;	
+ }
+ #issue{
+ 	display: none;
+ }
+ .interest p {
+ 	font-size: 16px;
+
+ }
+ .skill-icon{
+ 	font-size: 20px;
+ 	color:green;
+ 	padding-right: 5px;
+ } 
+ .job-icon{
+ 	font-size: 20px;
+ 	color:yellow;
+ 	padding-right: 5px;
+ } 
+
+ .hobby-icon{
+ 	font-size: 20px;
+ 	color:purple;
+ 	padding-right: 5px;
+ } 
+ .custom-icon{
+ 	font-size: 20px;
+ 	color:gray;
+ 	padding-right: 5px;
+ }
