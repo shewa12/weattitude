@@ -36,10 +36,10 @@
     </div>
     <div class="panel-body">
       <div class="col-sm-10">
-          <h4>5 Recommendations  listed</h4>
+          <h4><?php echo count($recomm);?> Recommendations  listed</h4>
       </div>
       <div class="col-sm-2">
-          <button type="button" class="btn-primary btn" data-toggle="modal" data-target="#addIssue">Add Recommendation</button>
+          <button type="button" class="btn-primary btn" data-toggle="modal" data-target="#addIssue"><i class="fas fa-plus-circle"></i> Add Recommendation</button>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@
   <div class="panel panel-default">
     <div class="panel-body issue-content">
       
-      <div class="col-xs-11 pull-left">{{$value->recommendation_detail}}</div>
+      <div class="col-xs-11 pull-left">{{$value->recommendation}}</div>
       <div class="col-xs-1 pull-right">
           <i class="fas fa-th-list toggle-icon dropdown-toggle"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="cursor:pointer"></i>
 
@@ -91,10 +91,10 @@
         <form method="post" action="{{route('saveRecomm')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
      
-
+  
+          <input type="hidden" name="issue_id" value="<?php echo implode(',',$selected_user_issue)?>"> 
           <div class="form-group">
-            
-            <textarea class="form-control" name="content" placeholder="Enter text here"></textarea>
+            <textarea class="form-control" name="recommendation" placeholder="Enter text here"></textarea>
           </div>
 
           <div class="form-group">

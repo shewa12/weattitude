@@ -3,6 +3,7 @@
 namespace admin\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;//auth for get logged in info
 use admin\Issues;
 use admin\Recomm;
@@ -14,42 +15,63 @@ class RecommCtrl extends Controller
     function __construct(){
         $this->middleware('auth');
     }    
-    function getRecomm(){
-        $id= Auth::id();
+    function getRecomm(Request $request){
+        $user_id= Auth::id();
         $title= "Issues";
-        $issues= Issues::select('issues.*','l.location_name')
-                    ->join('regions as r','issues.region_id','=','r.id')
-                    ->join('locations as l','l.id','=','r.location_id')
-                    ->orderBy('id','desc')
-                    ->where('issues.user_id',$id)
-                    ->get();
 
-        $recomm= Recomm::select("recomm.*",'i.content','l.location_name')
-                    ->join('issues as i','i.id','=','recomm.issue_id')
-                    ->join('regions as r','i.region_id','=','r.id')
-                    ->join('locations as l','l.id','=','r.location_id')                    
-                    ->where('recomm.user_id',$id)
+
+        $recomm= Recomm::select('recommendation')
+                   
+                    ->where('user_id',$user_id)
+                    ->whereIn('issue_id',$request->userIssue)
                     ->orderBy('id','desc')
                     ->get();
 
-        return view('users/recomm')->with(['title'=>$title,'issues'=>$issues,'recomm'=>$recomm]);
+        return view('users/recomm')->with(['title'=>$title,'recomm'=>$recomm,'selected_user_issue'=>$request->userIssue]);
+    }
+//below 2 function is for getting issue name and location but not implemented in view right now
+    function issueNameByid($issueArr){
+        $q= Issues::select('content')
+                ->whereIn('id',$issueArr)
+                ->get();
+
+        return $q;        
     }
 
-    function saveRecomm(Request $request){
-        $id= Auth::id();
-        $service= new Recomm([
-                'user_id'=>$id,
-                'issue_id'=>$request->issue_id,
-                'recommendation'=>$request->recommendation,
-                'initiatives'=>$request->initiatives
-            ]);
-        if($service->save()){
-            return redirect()->route('getRecomm')->with('success','Recommendation / Initiatives Added!');
-        }
-        else{
-            return redirect()->route('getRecomm')->with('fail','Recommendation / Initiatives Could Not Add!');
+    function issueRegionByid($issueArr){
+        $q= Issues::select('l.location_name')
+                ->join('locations as l','l.id','=','issues.location_id')
+                ->whereIn('issues.id',$issueArr)
+                ->get();
 
+        return $q; 
+    }
+   
+
+    function saveRecomm(Request $request){
+        $user_id= Auth::id();
+        $issue_id= $request->issue_id;
+
+        $issue_with_loc= $this->getLocationByIssueId($issue_id);
+        foreach($issue_with_loc as $key=>$v){
+            $post= new Recomm([
+                'user_id'=>$v->user_id,
+                'location_id'=>$v->location_id,
+                'issue_id'=>$v->id,
+                'recommendation'=>$request->recommendation
+            ]);
+            $post->save();
         }
+
+        return redirect()->route('home')->with('success','Recommendation Added!');
+            //return redirect()->back()->with('success','Issue Added!');
+    
+    }
+
+    function getLocationByIssueId($issue_id){
+        $arr= explode(',', $issue_id);
+        $q= Issues::whereIn('id',$arr)->get();
+        return $q;
     }
 
     function updateIssue(Request $request){

@@ -31,6 +31,13 @@ class RegionsCtrl extends Controller
         return view('admin/location')->with(['title'=>$title,'locations'=>$locations]);
     }    
 
+    function LocationNameById($idArr){
+        $q= Locations::whereIn('id',$idArr)
+                ->distinct('location_name','id')->get();
+        return $q;        
+    }
+
+
     function getUserLocation(){
         $id= Auth::id();
         $userLocation= Regions::select('locations.*','regions.id','regions.location_id')

@@ -42,10 +42,13 @@ class HomeController extends Controller
     {
 
         $title= "Dashboard";
+        $user_id= Auth::id();
         $interest= new InterestCtrl;
         $region= new RegionsCtrl;
+        $issue= new IssueCtrl;
+        $recomm= new RecommCtrl;
 
-        return view('users/dashboard')->with(['title'=>$title,'interests'=>$interest->getAllInterest(),'locations'=>$region->getAllLocations(),'userRegion'=>$region->getUserLocation()]);
+        return view('users/dashboard')->with(['title'=>$title,'interests'=>$interest->getAllInterest(),'locations'=>$region->getAllLocations(),'userRegion'=>$region->getUserLocation(),'userIssue'=>$issue->getUserIssue($user_id),'allIssue'=>$issue->getAllIssues()]);
     }
 
     function workLog(){

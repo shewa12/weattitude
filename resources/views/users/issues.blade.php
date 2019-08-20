@@ -33,14 +33,27 @@
   <div class="panel-default panel">
     <?php// print_r($selected_region);?>
     <div class="panel-heading">
-      <h3>What are issues in [selected region(s)] Bangladesh?</h3>
+      <h3>
+        <?php  $n=count($selected_region);?>
+        What are issues in [
+
+          @forelse($selected_region as $k=>$i)
+            {{$i->location_name}}
+            @if($k<$n-1)
+            {{","}}
+            @endif
+          @empty
+          @endforelse
+        ]
+
+      </h3>
     </div>
     <div class="panel-body">
       <div class="col-sm-10">
           <h4><?= count($issues);?> Issue listed</h4>
       </div>
       <div class="col-sm-2">
-          <button type="button" class="btn-primary btn" data-toggle="modal" data-target="#addIssue">Add Issue</button>
+          <button type="button" class="btn-primary btn" data-toggle="modal" data-target="#addIssue"><i class="fas fa-plus-circle"></i> Add Issue</button>
       </div>
     </div>
   </div>
@@ -91,15 +104,21 @@
       <div class="modal-body">
         <form method="post" action="{{route('saveIssue')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
-     
-
+          <?php $arr=[];?>
+          @forelse($selected_region as $sr)
+              <?php $arr[]=$sr->id?>
+          @empty
+          @endforelse   
+          <input type="hidden" name="region_id" value="<?php echo implode(',',$arr)?>"> 
           <div class="form-group">
-            <label>Issue</label>
-            <textarea class="form-control" name="content" placeholder="Enter text here"></textarea>
+            
+            <textarea onKeyup="checkDuplicate()" class="form-control" name="content" placeholder="Enter text here... max 250 words"></textarea>
+           
+            <span class="word-used" style="color:green;"></span>
           </div>
-
+          <div class="help-block"></div>
           <div class="form-group">
-            <button type="submit" class="btn-default btn" id="save">Submit</button>
+            <button type="submit" class="btn-default btn" id="submit">Submit</button>
           </div>
 
         </form>
@@ -186,6 +205,48 @@
               }
           });
 
+        }
+      }
+
+      function checkDuplicate(){
+
+          var content= $('[name="content"]').val();
+            $.ajax({
+
+              url : "<?php echo url('check-duplicate-issue')?>"+'/'+content,            
+              type: "GET",
+              dataType: "HTML",
+              success: function(data)
+              {
+                 console.log(data);
+                  if(data=="duplicate"){
+                    $(".help-block").html("Possible duplicate issue");
+                    countMatch();
+                    $("#submit").attr('disabled',true);
+                  }
+                  else{
+                    $(".help-block").empty();
+                    countMatch(content);
+                  }
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                  $(".word-used").empty();
+                  console.log('Error matching duplicate data');
+              }
+          });          
+      }
+      function countMatch(content){
+        $(".word-used").empty();
+        var matches= content.match(/\S+/g) ;
+        var length= matches?matches.length:0;
+        $(".word-used").html(250-length+" word remaining");
+        if(length>250){
+            $("#submit").attr('disabled',true);
+            
+        }
+        else{
+            $("#submit").attr('disabled',false);
         }
       }
   </script>

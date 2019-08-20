@@ -1066,7 +1066,7 @@
         <div class="clearfix"></div>
         <center><h3>OR</h3></center>
 <!--specific regions -->
-        <form method="post" action="{{route('saveLocation')}}" enctype="multipart/form-data">
+        <form method="post" action="{{route('specificRegion')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
 
                         <div class="demo">
@@ -1089,7 +1089,7 @@
                         </div>
                   
           <div class="form-group">
-            <a href="" class="btn-primary btn" id="save">Next</a>
+            <button class="btn-primary btn" id="save">Next</button>
           </div>
         </form>        
 <!--specific regions end-->        
@@ -1115,15 +1115,29 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" action="{{route('saveLocation')}}" enctype="multipart/form-data">
+        <form method="post" action="{{route('getRecomm')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
             
-          <div class="form-group">
-            <label for="country">Select From Issues You Listed</label>
-
-            <input class="form-control" onkeyup="getLocations()" id="search" placeholder="Type here...(you can select multiple)">
-            <div class="search-result"></div>
-          </div>
+                        <div class="demo">
+                          <div class="form-group">
+                            <label>Select From Issues You Listed</label>
+                            <select id="user-issue" name="userIssue[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)" required>
+                              <option value="">Type Here...(You can select multiple)</option>
+                                @forelse($userIssue as $ui)
+                                <option value="{{$ui->id}}">
+                                  <?php echo substr($ui->content,0,100)."...";?>
+                                </option>
+                                @empty
+                                <option value="">No issue found</option>
+                                @endforelse
+                            </select>
+                          </div>
+                          <script>
+                          $('#user-issue').selectize({
+                            maxItems: 30
+                          });
+                          </script>
+                        </div>
                     
           <div class="form-group">
             <button type="submit" class="btn-primary btn" id="save">Next</button>
@@ -1135,15 +1149,45 @@
         <form method="post" action="{{route('saveLocation')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
 
-          <div class="form-group">
-            <label>Select specific regions</label>
-            <input class="form-control" onkeyup="getLocations()" id="search" placeholder="Type here...(you can select multiple)">
-          </div>          
+                        <div class="demo">
+                          <div class="form-group">
+                            <label>Select specific regions</label>
+                            <select id="all-region-issue" name="locations[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)">
+                              <option value="">Type Here...(You can select multiple)</option>
+                                @forelse($locations as $value)
+                                <option value="{{$value->id}}">{{$value->location_name}}</option>
+                                @empty
 
-          <div class="form-group">
-            <label>Select specific issues</label>
-            <input class="form-control" onkeyup="getLocations()" id="search" placeholder="Type here...(you can select multiple)">
-          </div>
+                                @endforelse
+                            </select>
+                          </div>
+                          <script>
+                          $('#all-region-issue').selectize({
+                            maxItems: 30
+                          });
+                          </script>
+                        </div>          
+
+                        <div class="demo">
+                          <div class="form-group">
+                            <label>Select specific issue</label>
+                            <select id="all-issue" name="issues[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)" required>
+                              <option value="">Type Here...(You can select multiple)</option>
+                                @forelse($allIssue as $ai)
+                                <option value="{{$ai->id}}">
+                                  <?php echo substr($ai->content,0,100)."...";?>
+                                </option>
+                                @empty
+                                <option value="">No issue found</option>
+                                @endforelse
+                            </select>
+                          </div>
+                          <script>
+                          $('#all-issue').selectize({
+                            maxItems: 30
+                          });
+                          </script>
+                        </div>
                   
           <div class="form-group">
             <a href="{{route('getRecomm')}}" class="btn-primary btn" id="save">Next</a>
