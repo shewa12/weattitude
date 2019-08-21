@@ -48,7 +48,7 @@ class HomeController extends Controller
         $issue= new IssueCtrl;
         $recomm= new RecommCtrl;
 
-        return view('users/dashboard')->with(['title'=>$title,'interests'=>$interest->getAllInterest(),'locations'=>$region->getAllLocations(),'userRegion'=>$region->getUserLocation(),'userIssue'=>$issue->getUserIssue($user_id),'allIssue'=>$issue->getAllIssues()]);
+        return view('users/dashboard')->with(['title'=>$title,'interests'=>$interest->getAllInterest(),'locations'=>$region->getAllLocations(),'userRegion'=>$region->getUserLocation(),'userIssue'=>$issue->getUserIssue($user_id),'allIssue'=>$issue->getAllIssues(),'userRecomm'=>$recomm->getUserRecomm($user_id)]);
     }
 
     function workLog(){

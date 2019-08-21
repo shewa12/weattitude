@@ -47,7 +47,10 @@
   <div class="panel panel-default">
     <div class="panel-body issue-content">
       
-      <div class="col-xs-11 pull-left">{{$value->recommendation}}</div>
+      <div class="col-xs-11 pull-left">
+        {{$value->recommendation}}
+      </div>
+
       <div class="col-xs-1 pull-right">
           <i class="fas fa-th-list toggle-icon dropdown-toggle"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="cursor:pointer"></i>
 
@@ -88,11 +91,12 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" action="{{route('saveRecomm')}}" enctype="multipart/form-data">
+        <form method="post" action="{{route('saveSpecIssueRecomm')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
      
   
-          <input type="hidden" name="issue_id" value="<?php echo implode(',',$selected_user_issue)?>"> 
+          <input type="hidden" name="issue_id" value="<?= $selected_issue ?>"> 
+          <input type="hidden" name="region_id" value="<?= implode(',',$selected_region)?>"> 
           <div class="form-group">
             <textarea onKeyup="checkDuplicate()" class="form-control" name="recommendation" placeholder="Enter text here... max 250 words"></textarea>
             <span class="word-used" style="color:green;"></span>

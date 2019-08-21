@@ -76,8 +76,8 @@ Route::group([],function(){
 Route::group([],function(){
 	Route::post('/your-region',"IssueCtrl@yourRegion")->name('yourRegion');
 	Route::post('/specific-region',"IssueCtrl@specificRegion")->name('specificRegion');
-	Route::get('/check-duplicate-issue/{content}',"IssueCtrl@checkDuplicateIssue")->name('checkDuplicateIssue');
-
+	Route::post('/check-duplicate-issue/{content}',"IssueCtrl@checkDuplicateIssue")->name('checkDuplicateIssue');
+	Route::post('/getissue-for-region',"IssueCtrl@getIssueForRegion")->name("getIssueForRegion");
 	Route::post('/save-issue', "IssueCtrl@saveIssue")->name('saveIssue');
 	Route::post('/update-issue', "IssueCtrl@updateIssue")->name('updateIssue');
 	Route::get('/delete-issue/{id}', "IssueCtrl@deleteIssue")->name('deleteIssue')->where('id','[0-9]+');
@@ -88,8 +88,12 @@ Route::group([],function(){
 //recommendation management start
 Route::group([],function(){
 	Route::post('/recommendation',"RecommCtrl@getRecomm")->name('getRecomm');
+	Route::post('/check-duplicate-recomm',"RecommCtrl@checkDuplicateRecomm")->name('checkDuplicateRecomm');
+
+	Route::post('/specific-recommendation',"RecommCtrl@specRecomm")->name('specRecomm');
 	
 	Route::post('/save-recommendation', "RecommCtrl@saveRecomm")->name('saveRecomm');
+	Route::post('/save-recommendation-for-specific-issue', "RecommCtrl@saveSpecIssueRecomm")->name('saveSpecIssueRecomm');
 
 	Route::post('/update-recommendation', "RecommCtrl@updateRecomm")->name('updateRecomm');
 

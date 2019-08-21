@@ -15,6 +15,7 @@ class RecommCtrl extends Controller
     function __construct(){
         $this->middleware('auth');
     }    
+
     function getRecomm(Request $request){
         $user_id= Auth::id();
         $title= "Issues";
@@ -28,6 +29,32 @@ class RecommCtrl extends Controller
                     ->get();
 
         return view('users/recomm')->with(['title'=>$title,'recomm'=>$recomm,'selected_user_issue'=>$request->userIssue]);
+    }     
+
+    function getUserRecomm($user_id){
+
+        $recomm= Recomm::select('recommendation')
+                   
+                    ->where('user_id',$user_id)
+                    //->whereIn('issue_id',$request->userIssue)
+                    ->orderBy('id','desc')
+                    ->get();
+        return $recomm;            
+
+    }    
+
+    function specRecomm(Request $request){
+
+        $title= "Specific Issues";
+        $region_id= $request->region_id;//array
+        $issue_id= $request->issue_id;
+        $recomm= Recomm::where('issue_id',$issue_id)
+                    //->whereIn('issue_id',$request->userIssue)
+                    ->orderBy('id','desc')
+                    ->distinct('content')
+                    ->get();
+
+        return view('users/specific_issue_recomm')->with(['title'=>$title,'recomm'=>$recomm,'selected_issue'=>$issue_id,'selected_region'=>$region_id]);
     }
 //below 2 function is for getting issue name and location but not implemented in view right now
     function issueNameByid($issueArr){
@@ -46,7 +73,22 @@ class RecommCtrl extends Controller
 
         return $q; 
     }
-   
+ 
+    function checkDuplicateRecomm(){
+        $issue_id= explode(',',$_POST['issue_id']);
+        $recomm= $_POST['recomm'];
+
+        $q= Recomm::where('recommendation','like','%'.$recomm.'%')
+                ->whereIn('issue_id',$issue_id)
+                ->get();
+        if(count($q)>0){
+            echo "duplicate";
+        }
+        else{
+            echo "ok";
+        }
+
+    }   
 
     function saveRecomm(Request $request){
         $user_id= Auth::id();
@@ -60,6 +102,26 @@ class RecommCtrl extends Controller
                 'issue_id'=>$v->id,
                 'recommendation'=>$request->recommendation
             ]);
+            $post->save();
+        }
+
+        return redirect()->route('home')->with('success','Recommendation Added!');
+            //return redirect()->back()->with('success','Issue Added!');
+    
+    }    
+
+    function saveSpecIssueRecomm(Request $request){
+        $user_id= Auth::id();
+        $issue_id= $request->issue_id;
+        $region_id= explode(',',$request->region_id);
+        for ($i=0; $i <count($region_id); $i++) { 
+            $post= new Recomm([
+                'user_id'=>$user_id,
+                'issue_id'=>$issue_id,
+                'location_id'=>$region_id[$i],
+                'recommendation'=>$request->recommendation
+            ]);
+
             $post->save();
         }
 

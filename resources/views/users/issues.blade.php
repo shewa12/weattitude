@@ -209,19 +209,27 @@
       }
 
       function checkDuplicate(){
-
+          var csrf_token= $('meta[name="csrf-token"]').attr('content');
+          var region_id= $('[name="region_id"]').val();
           var content= $('[name="content"]').val();
+          var dataString = {
+            _token:csrf_token,
+            region_id:region_id,
+            content:content
+          };
+        if(content !==''){
             $.ajax({
 
-              url : "<?php echo url('check-duplicate-issue')?>"+'/'+content,            
-              type: "GET",
+              url: "<?php echo url('check-duplicate-issue')?>"+'/'+content,            
+              type: "POST",
+              data: dataString,
               dataType: "HTML",
               success: function(data)
               {
                  console.log(data);
                   if(data=="duplicate"){
                     $(".help-block").html("Possible duplicate issue");
-                    countMatch();
+                    countMatch(content);
                     $("#submit").attr('disabled',true);
                   }
                   else{
@@ -234,7 +242,8 @@
                   $(".word-used").empty();
                   console.log('Error matching duplicate data');
               }
-          });          
+          }); 
+        } //endif        
       }
       function countMatch(content){
         $(".word-used").empty();

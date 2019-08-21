@@ -1,3 +1,4 @@
+git pass: 12nn%%84923y9r9
 1) dashboard page design 18-8
 2) interest, region, issue CRUD  19-8
 3) recommendation,initiatives CRUD 20-8

@@ -1146,13 +1146,13 @@
         <div class="clearfix"></div>
         <center><h3>OR</h3></center>
 <!--specific regions -->
-        <form method="post" action="{{route('saveLocation')}}" enctype="multipart/form-data">
+        <form method="post" action="{{route('specRecomm')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
 
                         <div class="demo">
                           <div class="form-group">
                             <label>Select specific regions</label>
-                            <select id="all-region-issue" name="locations[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)">
+                            <select id="all-region-issue" name="region_id[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)">
                               <option value="">Type Here...(You can select multiple)</option>
                                 @forelse($locations as $value)
                                 <option value="{{$value->id}}">{{$value->location_name}}</option>
@@ -1168,29 +1168,20 @@
                           </script>
                         </div>          
 
-                        <div class="demo">
-                          <div class="form-group">
-                            <label>Select specific issue</label>
-                            <select id="all-issue" name="issues[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)" required>
-                              <option value="">Type Here...(You can select multiple)</option>
-                                @forelse($allIssue as $ai)
-                                <option value="{{$ai->id}}">
-                                  <?php echo substr($ai->content,0,100)."...";?>
-                                </option>
-                                @empty
-                                <option value="">No issue found</option>
-                                @endforelse
-                            </select>
-                          </div>
-                          <script>
-                          $('#all-issue').selectize({
-                            maxItems: 30
-                          });
-                          </script>
-                        </div>
+          <div class="form-group">
+            <label>Search specific issue</label>
+            <select class="form-control" id="specIssueRes" name="issue_id">
+              
+              <input name="specific_issue" class="form-control" placeholder="Type here..." id="matchSpecIssue">
+              
+            </select>
+            
+
+            <span class="help-text" id="spec-issue-error"></span>
+          </div>
                   
           <div class="form-group">
-            <a href="{{route('getRecomm')}}" class="btn-primary btn" id="save">Next</a>
+            <button href="{{route('saveSpecIssueRecomm')}}" class="btn-primary btn" id="specIssueBtn">Next</button>
           </div>
         </form>        
 <!--specific regions end-->        
@@ -1218,12 +1209,24 @@
         <form method="post" action="{{route('saveLocation')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
             
-          <div class="form-group">
-            <label for="country">Select From Solutions You Listed</label>
+                        <div class="demo">
+                          <div class="form-group">
+                            <label>Select From Solutions You Listed</label>
+                            <select id="user-recomm" name="recomm_id[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)">
+                              <option value="">Type Here...(You can select multiple)</option>
+                                @forelse($userRecomm as $userR)
+                                <option value="{{$value->id}}">{{$userR->recommendation}}</option>
+                                @empty
 
-            <input class="form-control" onkeyup="getLocations()" id="search" placeholder="Type here...(you can select multiple)">
-            <div class="search-result"></div>
-          </div>
+                                @endforelse
+                            </select> 
+                          </div>
+                          <script>
+                          $('#user-recomm').selectize({
+                            maxItems: 30
+                          });
+                          </script>
+                        </div>   
                     
           <div class="form-group">
             <button type="submit" class="btn-primary btn" id="save">Next</button>
@@ -1270,6 +1273,49 @@
 
 @section('js')
 <script type="text/javascript">
+  $("#matchSpecIssue").on("keyup", function(){
+/*
+    var region= $('#all-region-issue').selectize({
+             onInitialize: function (selectize) {
+                selectize.on('change', function (value) {
+                     var item = this.$input[0];
+                     var selected_text = $(item.selectize.getItem(value)[0]).text();
+                  });
+            }
+     });
+*/  
+    var region=[];
+        $.each($("#all-region-issue option:selected"), function(){            
+            region.push($(this).val());
+        });
+    
+    var content= $(this).val();
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+    var dataString= {_token:CSRF_TOKEN,region:region,content:content};
 
+      $.ajax({
+          url:"<?php echo url('getissue-for-region')?>",
+          type:"POST",
+          data:dataString,
+          dataType:"HTML",
+          success:function(data){
+            console.log(data);
+            if(data=="false"){
+              $("#spec-issue-error").html("Issue not found");
+              $("#specIssueBtn").attr('disabled',true);
+
+            }
+            else{
+              $('#specIssueRes').html(data);
+              $("#spec-issue-error").empty();
+              $("#specIssueBtn").attr('disabled',false);              
+            }
+          },
+          error:function(){
+              console.log("Error getting matched issue");
+          }
+      });
+      
+  })
 </script>
 @endsection

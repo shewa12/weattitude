@@ -45,8 +45,12 @@ class IssueCtrl extends Controller
         return view('users/issues')->with(['title'=>$title,'selected_region'=>$region->LocationNameById($request->locations) ,'issues'=>$issues]);
     }
 
-    function checkDuplicateIssue($content){
+    function checkDuplicateIssue(){
+        $region_id= explode(',',$_POST['region_id']);
+        $content= $_POST['content'];
+
         $q= Issues::where('content','like','%'.$content.'%')
+                ->whereIn('location_id',$region_id)
                 ->get();
         if(count($q)>0){
             echo "duplicate";
@@ -90,6 +94,25 @@ class IssueCtrl extends Controller
             ->get();
         return $q; 
     }
+
+    function getIssueForRegion(){
+        $content= $_POST['content'];
+        $region= $_POST['region'];
+
+        $q= Issues::select('id','content')
+                ->where('content','like','%'.$content.'%')
+                ->whereIn('location_id', $region)
+                ->first();
+
+        if(is_null($q)){
+            echo "false";
+        }
+        else{
+            echo "<option value='".$q->id."' style='overflow:hidden'>".substr($q->content,0,50)."...</option>";
+        }
+     
+    }
+
     function updateIssue(Request $request){
     	$services = Issues::where('id', $request->id)
     					->update(['name'=>$request->name]);

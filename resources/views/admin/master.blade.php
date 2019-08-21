@@ -87,6 +87,14 @@
   .count_top{
     text-align: center;
   }
+
+/*medium=>*/
+@media only screen and (min-width: 920px){
+  .dropdown-menu li a {
+    font-size: 16px;
+  }  
+}
+/*medium=>*/  
 /*switch css*/
 .switch {
   position: relative;
@@ -565,5 +573,6 @@ input:checked + .slider:before {
       gauge.setTextField(document.getElementById("gauge-text"));
     </script>
     <!-- /gauge.js -->
+
   </body>
 </html>
