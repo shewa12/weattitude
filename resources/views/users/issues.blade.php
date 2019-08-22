@@ -66,9 +66,9 @@
           <i class="fas fa-th-list toggle-icon dropdown-toggle"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="cursor:pointer"></i>
 
         <ul class="dropdown-menu">
-          <li><a href="#">Give Rating</a></li>
+          <li><a href="#"class="rating"  data-target="#addRating" id="{{$value->id}}" data-toggle="modal">Give Rating</a></li>
           
-          <li><a href="#">Mark for Delete</a></li>
+          <li><a href="#" class="mark_delete" id="{{$value->id}}">Mark for Delete</a></li>
           
           <li><a href="#">Suggest to Rename</a></li>
           
@@ -133,27 +133,31 @@
 
 <!--edit form--> 
 
-<div class="modal fade" id="editform" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addRating" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Update Service</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Give a rating</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form method="post" action="{{route('updateIssue')}}" enctype="multipart/form-data">
+      <div class="modal-body" style="text-align:center;font-size:25px;">
+        <form method="post" action="{{route('createRating')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
-          <input type="hidden" name="id">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input class="form-control" name="name" id="name" required></input>
+          <input type="hidden" name="type_id">
+          <input type="hidden" name="type" value="issue">
+
+          <div class="checkbox">
+            <i type="checkbox" id="checkbox" name="rating" value="1" class="far fa-thumbs-up bubbly-button"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="1"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="2"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="3"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="4"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="5"></i>
+
           </div>          
 
-          <div class="form-group">
-            <button type="submit" class="btn-default btn" id="save">Submit</button>
-          </div>
 
         </form>
       </div>
@@ -258,5 +262,84 @@
             $("#submit").attr('disabled',false);
         }
       }
+      //count match end
+      //rating
+      var rating;
+
+      $(".fa-thumbs-up").on('click',function(){
+          rating= $(this).attr('id');
+          $(".fa-thumbs-up").removeClass('active-thumb');
+          $(".fa-thumbs-up").removeClass('shake');
+          $(this).addClass('active-thumb shake');
+
+          var type= $('[name="type"]').val();
+          var typeId= $('[name="type_id"]').val();
+          var csrf_token= $('meta[name="csrf-token"]').attr('content');
+          var dataString= {
+            _token:csrf_token,
+            type:type,
+            type_id:typeId,
+            rating:rating
+          };
+
+            $.ajax({
+
+              url:"<?php echo url('/post-rating')?>",            
+              type: "POST",
+              data:dataString,
+              dataType: "HTML",
+              success: function(data)
+              {
+                if(data=="exists"){
+                    alert("You have already submited rating!");
+                    return ;
+                }
+                else{
+                  location.reload();   
+                  alert("Rating posted!");
+                  console.log(data);
+                                
+                }
+
+                  
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                  console.log('Error posting rating');
+              }
+          });
+
+
+
+      });//function close
+      //rating end
+      //set issue id
+      $(".rating").click(function(){
+        $(".fa-thumbs-up").removeClass('active-thumb shake');
+        var issue_id= $(this).attr('id');
+        $('[name="type_id"]').val(issue_id);
+      });
+      //set issue id end
+
+      $(".mark_delete").on('click',function(){
+            var issue_id= $(this).attr('id');
+            var name="issue";
+            $.ajax({
+
+              url:"<?php echo url('/issue-mark-delete')?>"+'/'+issue_id+'/'+name,            
+              type: "GET",
+             
+              dataType: "HTML",
+              success: function(data)
+              {
+                 alert(data);
+                  
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                  console.log('Error posting rating');
+              }
+          });
+      });
   </script>
 @endsection

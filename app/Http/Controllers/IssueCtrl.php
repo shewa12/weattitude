@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;//auth for get logged in info
 use admin\Issues;
 use admin\Regions;
 use admin\Locations;
+use admin\MarkDelete;
 
 class IssueCtrl extends Controller
 {
@@ -127,8 +128,30 @@ class IssueCtrl extends Controller
     }
 
     function deleteIssue($id){
- 		$user= Issues::where('id',$id)
- 					 ->delete();
+        $user= Issues::where('id',$id)
+                     ->delete();
      
+    }    
+
+    function markDelete($type_id,$name){
+        $post=[
+            'user_id'=>Auth::id(),
+            'type_id'=>$type_id,
+            'type'=>$name
+            ];
+        $q= MarkDelete::where($post)->get();
+        if(count($q)>0){
+            echo "You have already marked for delete!";
+        }
+        else{
+            $q= new MarkDelete($post);
+            if($q->save()){
+                echo "Marked for delete!";
+            }           
+            else{
+                echo "something went wrong, please try again!";
+            }
+        }
+
     }
 }

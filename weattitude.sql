@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 20, 2019 at 11:47 AM
+-- Generation Time: Aug 22, 2019 at 11:36 AM
 -- Server version: 5.7.23
 -- PHP Version: 7.2.10
 
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `issues` (
   PRIMARY KEY (`id`),
   KEY `regionsIdForissue` (`region_id`),
   KEY `UserIdForIssue` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `issues`
@@ -246,7 +246,8 @@ INSERT INTO `issues` (`id`, `user_id`, `location_id`, `region_id`, `content`, `s
 (19, 14, 1, NULL, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:00:41', '2019-08-20 06:00:41'),
 (20, 14, 7, NULL, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:00:41', '2019-08-20 06:00:41'),
 (21, 14, 1, NULL, 'test issue', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:02:29', '2019-08-20 06:02:29'),
-(22, 14, 7, NULL, 'test issue', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:02:29', '2019-08-20 06:02:29');
+(22, 14, 7, NULL, 'test issue', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:02:29', '2019-08-20 06:02:29'),
+(23, 14, 6, NULL, 'issue added for bangladesh', NULL, NULL, NULL, NULL, NULL, '2019-08-22 10:38:53', '2019-08-22 10:38:53');
 
 -- --------------------------------------------------------
 
@@ -285,6 +286,31 @@ INSERT INTO `locations` (`id`, `location_name`, `location_level`, `parent_id`, `
 (9, 'East Asia', 'Region Area', '10', 'Asia', 'Region', '38.7946', '106.5348', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (10, 'Asia', 'Region', '1', 'World', 'World', '34.0479', '100.6197', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (11, 'Africa', 'Region', '1', 'World', 'World', '8.7832', '34.5085', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mark_delete`
+--
+
+DROP TABLE IF EXISTS `mark_delete`;
+CREATE TABLE IF NOT EXISTS `mark_delete` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `type_id` int(11) UNSIGNED NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `initIdForMarkDelte` (`type_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `mark_delete`
+--
+
+INSERT INTO `mark_delete` (`id`, `user_id`, `type_id`, `type`, `created_at`, `updated_at`) VALUES
+(1, 14, 23, 'issue', '2019-08-22 11:30:30', '2019-08-22 11:30:30');
 
 -- --------------------------------------------------------
 
@@ -422,6 +448,33 @@ INSERT INTO `project_indicator` (`id`, `project_id`, `indicator_value`, `title`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rating`
+--
+
+DROP TABLE IF EXISTS `rating`;
+CREATE TABLE IF NOT EXISTS `rating` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `rating` int(11) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `userIdForRating` (`user_id`),
+  KEY `initIdForRating` (`type_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `rating`
+--
+
+INSERT INTO `rating` (`id`, `user_id`, `type_id`, `type`, `rating`, `created_at`, `updated_at`) VALUES
+(12, 14, 23, 'issue', 5, '2019-08-22 10:39:06', '2019-08-22 10:39:06');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `recomm`
 --
 
@@ -445,7 +498,7 @@ CREATE TABLE IF NOT EXISTS `recomm` (
   PRIMARY KEY (`id`),
   KEY `IssueIdForRecomm` (`issue_id`),
   KEY `UserIdForRecomm` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `recomm`
@@ -466,7 +519,13 @@ INSERT INTO `recomm` (`id`, `issue_id`, `user_id`, `location_id`, `recommendatio
 (13, 3, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:38', '2018-12-31 09:11:38'),
 (14, 3, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:49', '2018-12-31 09:11:49'),
 (15, 11, 14, 0, 'test recomm', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-20 11:45:02', '2019-08-20 11:45:02'),
-(16, 16, 14, 4, 'test recomm', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-20 11:45:02', '2019-08-20 11:45:02');
+(16, 16, 14, 4, 'test recomm', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-20 11:45:02', '2019-08-20 11:45:02'),
+(17, 4, 14, 0, 'Australia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after suffering concussion, Cricket Australia announced Tuesday.\r\n\r\nThe 30-year-old -- who has scored two centuries and 92 in his three innings in the first two Tests -- was felled by a Jofra Archer bouncer on Saturday in the first innings of the second Test at Lord’s.\r\n\r\n“Steve Smith has been ruled out of the third Ashes Test at Headingley, with coach Justin Langer confirming the news after the batsman sat out Australia’s training session on Tuesday,” Cricket Australia announced on their website.\r\n\r\nThe team doctor Richard Saw had the final say on whether Smith played or not and he was seen speaking with him during team training on Tuesday. According to the website vice-captain Pat Cummins patted Smith on the shoulder and coach Justin Langer wrapped his arm round the former captain as the rest of the squad trained without him.\r\n\r\nSmith, whose two centuries in the first Test were pivotal in Australia taking a 1-0 lead, returned t so bat on Saturday despite the blow to the side of the head that felled him. He added 12 runs before being out.\r\nAustralia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after sufferin sfjkfh hjkfhkf fhsdjk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 07:21:24', '2019-08-21 07:21:24'),
+(18, 16, 14, 4, 'Australia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after suffering concussion, Cricket Australia announced Tuesday.\r\n\r\nThe 30-year-old -- who has scored two centuries and 92 in his three innings in the first two Tests -- was felled by a Jofra Archer bouncer on Saturday in the first innings of the second Test at Lord’s.\r\n\r\n“Steve Smith has been ruled out of the third Ashes Test at Headingley, with coach Justin Langer confirming the news after the batsman sat out Australia’s training session on Tuesday,” Cricket Australia announced on their website.\r\n\r\nThe team doctor Richard Saw had the final say on whether Smith played or not and he was seen speaking with him during team training on Tuesday. According to the website vice-captain Pat Cummins patted Smith on the shoulder and coach Justin Langer wrapped his arm round the former captain as the rest of the squad trained without him.\r\n\r\nSmith, whose two centuries in the first Test were pivotal in Australia taking a 1-0 lead, returned t so bat on Saturday despite the blow to the side of the head that felled him. He added 12 runs before being out.\r\nAustralia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after sufferin sfjkfh hjkfhkf fhsdjk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 07:21:24', '2019-08-21 07:21:24'),
+(19, 18, 14, 8, 'Australia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after suffering concussion, Cricket Australia announced Tuesday.\r\n\r\nThe 30-year-old -- who has scored two centuries and 92 in his three innings in the first two Tests -- was felled by a Jofra Archer bouncer on Saturday in the first innings of the second Test at Lord’s.\r\n\r\n“Steve Smith has been ruled out of the third Ashes Test at Headingley, with coach Justin Langer confirming the news after the batsman sat out Australia’s training session on Tuesday,” Cricket Australia announced on their website.\r\n\r\nThe team doctor Richard Saw had the final say on whether Smith played or not and he was seen speaking with him during team training on Tuesday. According to the website vice-captain Pat Cummins patted Smith on the shoulder and coach Justin Langer wrapped his arm round the former captain as the rest of the squad trained without him.\r\n\r\nSmith, whose two centuries in the first Test were pivotal in Australia taking a 1-0 lead, returned t so bat on Saturday despite the blow to the side of the head that felled him. He added 12 runs before being out.\r\nAustralia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after sufferin sfjkfh hjkfhkf fhsdjk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 07:21:24', '2019-08-21 07:21:24'),
+(20, 17, 14, 1, 'test recomm added', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 09:56:48', '2019-08-21 09:56:48'),
+(21, 17, 14, 5, 'test recomm added', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 09:56:48', '2019-08-21 09:56:48'),
+(22, 17, 14, 8, 'test recomm added', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 09:56:48', '2019-08-21 09:56:48');
 
 -- --------------------------------------------------------
 
@@ -639,7 +698,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `fname`, `lname`, `email`, `image`, `image_path`, `about`, `password`, `remember_token`, `created_at`, `updated_at`, `role`, `age`, `address`, `region`, `accountNumber`, `phoneNumber`, `recognitionSign`) VALUES
-(14, 'shewa', 'shaikh', 'ahmed', 'shewa@gmail.com', 'corporate-client-service.jpg', 'C:\\xampp\\tmp\\phpB898.tmp', NULL, '$2y$10$er2i921HzoP6shP9yEKkgOXN7qIG37MdRktgKGRFIeBTVSjMYYxQS', 'at4Vn5Tw2ocnJpjyzlXry6FTuqcy4fzN5i1FHnAxKeVowG4KrrO8VkDd70wI', '2018-09-26 11:30:16', '2018-12-16 03:27:42', 1, NULL, NULL, NULL, NULL, NULL, NULL),
+(14, 'shewa', 'shaikh', 'ahmed', 'shewa@gmail.com', 'corporate-client-service.jpg', 'C:\\xampp\\tmp\\phpB898.tmp', NULL, '$2y$10$er2i921HzoP6shP9yEKkgOXN7qIG37MdRktgKGRFIeBTVSjMYYxQS', 'I7UDjVebYTlyL6uPdAZgS3KD9XgQAvTutmXwn6nGlKW4uYUBCQBuQIl4nUgG', '2018-09-26 11:30:16', '2019-08-22 04:21:47', 1, NULL, NULL, NULL, NULL, NULL, NULL),
 (15, 'ninad', NULL, NULL, 'ninad@gmail.com', NULL, NULL, NULL, '$2y$10$sVd3Q9YJVlkfKVN/Ai5UpOiItNkZEu8zwBLuRIbxin5QphxD/XfVm', 'wZAwY1Z8JnmRZNfF4TYyIek0n6tVQ1Cu4zgBa3VqPiaiADQZ56HLGiWjyWEU', '2018-10-09 11:28:00', '2018-10-09 11:28:21', 1, NULL, NULL, NULL, NULL, NULL, NULL),
 (16, 'test', 'TestFirstName', 'TestLastName', 'test@test.com', 'cropped_i acknowledge you_g.png', '/tmp/phpDMNfCC', NULL, '$2y$10$ohHXpuWiOwSZhq.KmsstcuQFEE86Cvr6QzR5nezodmtW30yZkUn.C', 'qshHjxOAXwisxd3UQu99jQGCf8678b27YUOStGnAeL60zIjPyrez8QyadgVB', '2018-10-09 12:28:49', '2018-12-31 18:29:29', 1, NULL, NULL, NULL, NULL, NULL, NULL),
 (17, 'gtest', '', '', 'gtest@test.mail', 'i_acknowledge_u_g.jpg', '/tmp/phpa9SDdu', NULL, '$2y$10$v8SoVVTJeb6hgFitr5g9FeqaXHmKIFknlw.lYjry.q5cpeXybVHfS', NULL, '2018-11-03 22:09:57', '2018-11-03 22:12:59', 1, NULL, NULL, NULL, NULL, NULL, NULL);

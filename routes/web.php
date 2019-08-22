@@ -82,6 +82,8 @@ Route::group([],function(){
 	Route::post('/update-issue', "IssueCtrl@updateIssue")->name('updateIssue');
 	Route::get('/delete-issue/{id}', "IssueCtrl@deleteIssue")->name('deleteIssue')->where('id','[0-9]+');
 
+	Route::get('/issue-mark-delete/{type_id}/{name}', "IssueCtrl@markDelete")->name('markDelete')->where('id','[0-9]+');
+
 });
 //Service management ende
 
@@ -175,3 +177,10 @@ Route::group([],function(){
 	Route::get('/search-int-public/{interest}',"VisitorsCtrl@searchInterestPublic")->name('searchInterestPublic');
 });
 //public users route end
+
+//rating routes for users
+Route::group([''], function(){
+
+	Route::post('/post-rating',"RatingCtrl@createRating")->name('createRating');
+});
+//rating routes end
