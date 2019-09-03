@@ -4,8 +4,8 @@ namespace admin;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MarkDelete extends Model
+class IssueMarkDelete extends Model
 {
-    public $table="mark_delete";
+    public $table="issue_mark_delete";
     protected $guarded=[];
 }

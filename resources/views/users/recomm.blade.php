@@ -35,10 +35,10 @@
       <h3>What are Recommended Solutions for Unemployment [selected issues] in regions [selected regions] Bangladesh?</h3>
     </div>
     <div class="panel-body">
-      <div class="col-sm-10">
+      <div class="col-sm-9">
           <h4><?php echo count($recomm);?> Recommendations  listed</h4>
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-3">
           <button type="button" class="btn-primary btn" data-toggle="modal" data-target="#addIssue"><i class="fas fa-plus-circle"></i> Add Recommendation</button>
       </div>
     </div>
@@ -52,18 +52,19 @@
           <i class="fas fa-th-list toggle-icon dropdown-toggle"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="cursor:pointer"></i>
 
         <ul class="dropdown-menu">
-          <li><a href="#">Give Rating</a></li>
+          <li><a data-target="#addRating" data-toggle="modal" class="rating" id="{{$value->id}}">Give Rating</a></li>
           
-          <li><a href="#">Mark for Delete</a></li>
+          <li><a class="mark_delete" id="{{$value->id}}">Mark for Delete</a></li>
           
-          <li><a href="#">Suggest to Rename</a></li>
-          
-          <li><a href="#">Offer Recommendation</a></li>
+          <li><a data-target="#addSuggest" data-toggle="modal" class="addIssueForSug" id="{{$value->id}}">Suggest to Rename</a></li>
 
-          <li><a href="#">Offer for OR Against Remark</a></li>
+          <li><a href="{{url('offer-initiatives')}}/{{$value->id}}">Offer Ongoing Initiatives</a></li>
+
+          <li><a >Offer For or Against Remark</a></li>
+
+          
         </ul>
       </div>
-
     </div>
   </div>
 @empty()
@@ -82,7 +83,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Issue</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add Recommendation</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -92,7 +93,7 @@
               {{ csrf_field() }}
      
   
-          <input type="hidden" name="issue_id" value="<?php echo implode(',',$selected_user_issue)?>"> 
+          <input type="hidden" name="issue_id" value="<?php echo implode(',',$selected_issue)?>"> 
           <div class="form-group">
             <textarea onKeyup="checkDuplicate()" class="form-control" name="recommendation" placeholder="Enter text here... max 250 words"></textarea>
             <span class="word-used" style="color:green;"></span>
@@ -113,29 +114,33 @@
 </div>
 <!--modal for add end-->   
 
-<!--edit form--> 
+<!--rating,rename,suggestion form--> 
 
-<div class="modal fade" id="editform" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addRating" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Update Service</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Give a rating</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form method="post" action="{{route('updateIssue')}}" enctype="multipart/form-data">
+      <div class="modal-body" style="text-align:center;font-size:25px;">
+        <form method="post" action="" enctype="multipart/form-data">
               {{ csrf_field() }}
-          <input type="hidden" name="id">
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input class="form-control" name="name" id="name" required></input>
+          <input type="hidden" name="type_id">
+          <input type="hidden" name="type" value="issue">
+
+          <div class="checkbox">
+            <i type="checkbox" id="checkbox" name="rating" value="1" class="far fa-thumbs-up bubbly-button"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="1"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="2"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="3"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="4"></i>
+            <i class="far fa-thumbs-up bubbly-button" id="5"></i>
+
           </div>          
 
-          <div class="form-group">
-            <button type="submit" class="btn-default btn" id="save">Submit</button>
-          </div>
 
         </form>
       </div>
@@ -146,6 +151,38 @@
   </div>
 </div>
 <!--edit form end--> 
+<!--suggest to rename-->
+
+<div class="modal fade" id="addSuggest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Suggest to new name</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <form method="post" action="" enctype="multipart/form-data">
+              {{ csrf_field() }}
+              <input type="hidden" id="" name="setIssueIdForSug">
+              <div class="form-group">
+                <label>Enter new name suggestion</label>
+                <textarea class="form-control" name="issue_suggestion"></textarea>
+             </div>
+             <div class="form-group">
+               <button type="button" onClick="issueSuggestion()" class="btn btn-primary">Submit</button>
+             </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--suggest to rename end-->
+<!--rating,rename,suggestion form end--> 
   </div><!--main  col div end-->
 @endsection
 
@@ -236,6 +273,135 @@
         else{
             $("#submit").attr('disabled',false);
         }
-      }      
+      } 
+      //count match end
+
+      //rating
+      var rating;
+
+      $(".fa-thumbs-up").on('click',function(){
+          rating= $(this).attr('id');
+          $(".fa-thumbs-up").removeClass('active-thumb');
+          $(".fa-thumbs-up").removeClass('shake');
+          $(this).addClass('active-thumb shake');
+
+          var typeId= $('[name="type_id"]').val();
+          var csrf_token= $('meta[name="csrf-token"]').attr('content');
+          var dataString= {
+            _token:csrf_token,
+            
+            type_id:typeId,
+            rating:rating
+          };
+          console.log(dataString);
+
+            $.ajax({
+
+              url:"<?php echo url('/recommendation-rating')?>",            
+              type: "POST",
+              data:dataString,
+              dataType: "HTML",
+              success: function(data)
+              {
+                if(data=="exists"){
+                    alert("You have already submited rating!");
+                    return ;
+                }
+                else{
+                  location.reload();   
+                  alert("Rating posted!");
+                  console.log(data);
+                                
+                }
+
+                  
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                  console.log('Error posting rating');
+              }
+          });
+
+
+
+      });//function close
+      //rating end 
+      
+      //set issue id
+      $(".rating").click(function(){
+        $(".fa-thumbs-up").removeClass('active-thumb shake');
+        var issue_id= $(this).attr('id');
+        $('[name="type_id"]').val(issue_id);
+      });  
+
+      //set issue id end
+
+      //mark delete & suggest    
+      $(".mark_delete").on('click',function(){
+            var recomm_id= $(this).attr('id');
+            
+            $.ajax({
+
+              url:"<?php echo url('/recommendation-mark-delete')?>"+'/'+recomm_id,            
+              type: "GET",
+             
+              dataType: "HTML",
+              success: function(data)
+              {
+                 alert(data);
+                  
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                  console.log('Error posting rating');
+              }
+          });
+      });
+      //issue suggestion
+          function issueSuggestion(){
+          var recomm_id= $("[name='setIssueIdForSug']").val();
+          var recomm_suggest= $('[name="issue_suggestion"]').val();
+          var csrf_token= $('meta[name="csrf-token"]').attr('content');
+          var dataString= {
+            _token:csrf_token,
+            recomm_id:recomm_id,
+            recomm_suggest:recomm_suggest
+          };
+
+
+            $.ajax({
+
+              url:"<?php echo url('/recommendation-suggestion')?>",            
+              type: "POST",
+              data:dataString,
+              dataType: "HTML",
+              success: function(data)
+              {
+                if(data=="exists"){
+                    alert("You have already submited suggestion!");
+                    $("[name='issue_suggestion']").empty();
+                    return ;
+                }
+                else{
+                  $("[name='issue_suggestion']").empty();  
+                  alert("Suggestion  submitted!");
+                 
+                                
+                }
+
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                  console.log('Error posting suggestion');
+              }
+          });
+
+      }
+
+      $('.addIssueForSug').on('click',function(){
+          var issue_id= $(this).attr('id');
+          $('[name="setIssueIdForSug"]').val(issue_id);
+      });                
+      //mark delete & suggest end              
   </script>
 @endsection

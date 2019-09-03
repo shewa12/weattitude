@@ -4,21 +4,25 @@ namespace admin\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use admin\Rating;
+use admin\IssueRating;
+use admin\RecommRating;
+use admin\InitiativeRating;
 class RatingCtrl extends Controller
 {
-    function createRating(){
+
+    function createIssueRating(){
+
     	$post= [
     		'user_id'=>Auth::id(),
-    		'type_id'=>$_POST['type_id'],
-    		'type'=>$_POST['type'],
+    		'issue_id'=>$_POST['type_id'],
+    		
     		'rating'=>$_POST['rating']
     	];
 
-    	$q= Rating::where([
+    	$q= IssueRating::where([
     		'user_id'=>$post['user_id'],
-    		'type_id'=>$post['type_id'],
-    		'type'=>$post['type']
+    		'issue_id'=>$post['issue_id'],
+    		
     		])->get();
   
     	if(count($q)>0){
@@ -26,7 +30,7 @@ class RatingCtrl extends Controller
     		echo "exists";
     	}
     	else{
-	    	$q= new Rating($post);
+	    	$q= new IssueRating($post);
 	    	if($q->save()){
 	    		echo "true";
 	    	}
@@ -36,6 +40,66 @@ class RatingCtrl extends Controller
     	}
 
     }
+
+    function createRecommRating(){
+        $post= [
+            'user_id'=>Auth::id(),
+            'recomm_id'=>$_POST['type_id'],
+            
+            'rating'=>$_POST['rating']
+        ];
+
+        $q= RecommRating::where([
+            'user_id'=>$post['user_id'],
+            'recomm_id'=>$post['recomm_id'],
+            
+            ])->get();
+  
+        if(count($q)>0){
+            
+            echo "exists";
+        }
+        else{
+            $q= new RecommRating($post);
+            if($q->save()){
+                echo "true";
+            }
+            else{
+                echo "false";
+            }           
+        }
+
+    }
+
+    function createInitRating(){
+        $post= [
+            'user_id'=>Auth::id(),
+            'initiatives_id'=>$_POST['type_id'],
+            
+            'rating'=>$_POST['rating']
+        ];
+
+        $q= InitiativeRating::where([
+            'user_id'=>$post['user_id'],
+            'initiatives_id'=>$post['initiatives_id'],
+            
+            ])->get();
+  
+        if(count($q)>0){
+            
+            echo "exists";
+        }
+        else{
+            $q= new InitiativeRating($post);
+            if($q->save()){
+                echo "true";
+            }
+            else{
+                echo "false";
+            }           
+        }
+
+    }    
 
     function udpateRating($id){
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 22, 2019 at 11:36 AM
+-- Generation Time: Aug 29, 2019 at 10:55 AM
 -- Server version: 5.7.23
 -- PHP Version: 7.2.10
 
@@ -108,15 +108,74 @@ DROP TABLE IF EXISTS `initiatives`;
 CREATE TABLE IF NOT EXISTS `initiatives` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` int(11) UNSIGNED NOT NULL,
-  `issue_id` int(11) UNSIGNED NOT NULL,
-  `recomm_id` int(11) UNSIGNED NOT NULL,
   `content` text,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `userIdForIni` (`user_id`),
-  KEY `issueIdForIni` (`issue_id`),
-  KEY `recommIdForIni` (`recomm_id`)
+  KEY `userIdForIni` (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `initiatives`
+--
+
+INSERT INTO `initiatives` (`id`, `user_id`, `content`, `created_at`, `updated_at`) VALUES
+(1, 14, 'No initiatives taken yet!', '2019-08-29 05:19:23', '2019-08-29 05:19:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `initiatives_mark_delete`
+--
+
+DROP TABLE IF EXISTS `initiatives_mark_delete`;
+CREATE TABLE IF NOT EXISTS `initiatives_mark_delete` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `initiatives_id` int(10) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `userIdForInitMD` (`user_id`),
+  KEY `initIdForInitInitMD` (`initiatives_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `initiatives_rating`
+--
+
+DROP TABLE IF EXISTS `initiatives_rating`;
+CREATE TABLE IF NOT EXISTS `initiatives_rating` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `initiatives_id` int(10) UNSIGNED NOT NULL,
+  `rating` int(11) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `initIdForInitR` (`initiatives_id`),
+  KEY `userIdForInitR` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `initiatives_suggestion`
+--
+
+DROP TABLE IF EXISTS `initiatives_suggestion`;
+CREATE TABLE IF NOT EXISTS `initiatives_suggestion` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `initiatives_id` int(10) UNSIGNED NOT NULL,
+  `content` text,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `userIdForInitSug` (`user_id`),
+  KEY `initIdForInitInitSug` (`initiatives_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -211,8 +270,6 @@ DROP TABLE IF EXISTS `issues`;
 CREATE TABLE IF NOT EXISTS `issues` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` int(10) UNSIGNED NOT NULL,
-  `location_id` int(11) NOT NULL,
-  `region_id` int(11) UNSIGNED DEFAULT NULL,
   `content` longtext,
   `severity` varchar(255) DEFAULT NULL,
   `issue_severity_score` varchar(255) DEFAULT NULL,
@@ -222,32 +279,131 @@ CREATE TABLE IF NOT EXISTS `issues` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `regionsIdForissue` (`region_id`),
   KEY `UserIdForIssue` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `issues`
 --
 
-INSERT INTO `issues` (`id`, `user_id`, `location_id`, `region_id`, `content`, `severity`, `issue_severity_score`, `issue_ranking_within_region`, `issue_popularity_count`, `issue_popularity_score`, `created_at`, `updated_at`) VALUES
-(3, 14, 0, 6, 'some information', '', NULL, NULL, '1', NULL, '2018-09-29 17:17:48', '2018-09-29 17:17:48'),
-(4, 14, 0, 2, 'Bangladesh is development country', '', NULL, NULL, '2', NULL, '2018-10-02 16:21:09', '2018-10-02 16:21:09'),
-(5, 16, 0, 7, 'Low access to renewable energy', '', NULL, NULL, '1', NULL, '2018-10-09 06:31:58', '2018-10-09 06:31:58'),
-(8, 16, 0, 8, 'Ability to attract foreign workers', '', NULL, NULL, '3', NULL, '2018-10-09 06:33:42', '2018-10-09 06:33:42'),
-(9, 16, 0, 9, 'Insufficient Tech jobs', '', NULL, NULL, '2', NULL, '2018-10-09 06:45:46', '2018-10-09 06:45:46'),
-(11, 14, 0, 4, 'there was heavy clash', 'High', NULL, NULL, '1', NULL, '2018-10-10 18:47:02', '2018-10-10 18:47:02'),
-(13, 16, 0, 10, 'Low access to quality education', 'High', NULL, NULL, '1', NULL, '2018-10-11 06:52:57', '2018-10-11 06:52:57'),
-(14, 17, 0, 13, 'Malaria', 'Low', NULL, NULL, '3', NULL, '2018-11-03 16:12:06', '2018-11-03 16:12:06'),
-(15, 14, 2, NULL, 'New test issue ', NULL, NULL, NULL, NULL, NULL, '2019-08-20 05:50:37', '2019-08-20 05:50:37'),
-(16, 14, 4, NULL, 'New test issue ', NULL, NULL, NULL, NULL, NULL, '2019-08-20 05:50:37', '2019-08-20 05:50:37'),
-(17, 14, 1, NULL, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', NULL, NULL, NULL, NULL, NULL, '2019-08-20 05:51:46', '2019-08-20 05:51:46'),
-(18, 14, 8, NULL, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', NULL, NULL, NULL, NULL, NULL, '2019-08-20 05:51:46', '2019-08-20 05:51:46'),
-(19, 14, 1, NULL, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:00:41', '2019-08-20 06:00:41'),
-(20, 14, 7, NULL, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:00:41', '2019-08-20 06:00:41'),
-(21, 14, 1, NULL, 'test issue', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:02:29', '2019-08-20 06:02:29'),
-(22, 14, 7, NULL, 'test issue', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:02:29', '2019-08-20 06:02:29'),
-(23, 14, 6, NULL, 'issue added for bangladesh', NULL, NULL, NULL, NULL, NULL, '2019-08-22 10:38:53', '2019-08-22 10:38:53');
+INSERT INTO `issues` (`id`, `user_id`, `content`, `severity`, `issue_severity_score`, `issue_ranking_within_region`, `issue_popularity_count`, `issue_popularity_score`, `created_at`, `updated_at`) VALUES
+(3, 14, 'some information', '', NULL, NULL, '1', NULL, '2018-09-29 17:17:48', '2018-09-29 17:17:48'),
+(4, 14, 'Bangladesh is development country', '', NULL, NULL, '2', NULL, '2018-10-02 16:21:09', '2018-10-02 16:21:09'),
+(5, 16, 'Low access to renewable energy', '', NULL, NULL, '1', NULL, '2018-10-09 06:31:58', '2018-10-09 06:31:58'),
+(8, 16, 'Ability to attract foreign workers', '', NULL, NULL, '3', NULL, '2018-10-09 06:33:42', '2018-10-09 06:33:42'),
+(9, 16, 'Insufficient Tech jobs', '', NULL, NULL, '2', NULL, '2018-10-09 06:45:46', '2018-10-09 06:45:46'),
+(11, 14, 'there was heavy clash', 'High', NULL, NULL, '1', NULL, '2018-10-10 18:47:02', '2018-10-10 18:47:02'),
+(13, 16, 'Low access to quality education', 'High', NULL, NULL, '1', NULL, '2018-10-11 06:52:57', '2018-10-11 06:52:57'),
+(14, 17, 'Malaria', 'Low', NULL, NULL, '3', NULL, '2018-11-03 16:12:06', '2018-11-03 16:12:06'),
+(15, 14, 'New test issue ', NULL, NULL, NULL, NULL, NULL, '2019-08-20 05:50:37', '2019-08-20 05:50:37'),
+(16, 14, 'New test issue ', NULL, NULL, NULL, NULL, NULL, '2019-08-20 05:50:37', '2019-08-20 05:50:37'),
+(17, 14, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', NULL, NULL, NULL, NULL, NULL, '2019-08-20 05:51:46', '2019-08-20 05:51:46'),
+(18, 14, 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', NULL, NULL, NULL, NULL, NULL, '2019-08-20 05:51:46', '2019-08-20 05:51:46'),
+(19, 14, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:00:41', '2019-08-20 06:00:41'),
+(20, 14, 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:00:41', '2019-08-20 06:00:41'),
+(21, 14, 'test issue', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:02:29', '2019-08-20 06:02:29'),
+(22, 14, 'test issue', NULL, NULL, NULL, NULL, NULL, '2019-08-20 06:02:29', '2019-08-20 06:02:29'),
+(23, 14, 'issue added for bangladesh', NULL, NULL, NULL, NULL, NULL, '2019-08-22 10:38:53', '2019-08-22 10:38:53'),
+(24, 14, 'test issue', NULL, NULL, NULL, NULL, NULL, '2019-08-28 04:35:38', '2019-08-28 04:35:38'),
+(28, 14, 'In a reversal of its stance, Bangladesh Bank yesterday paved the way for 11 large business groups to reschedule their loans even though they restructured their loans four years ago on condition of regular repayments.', NULL, NULL, NULL, NULL, NULL, '2019-08-28 04:46:23', '2019-08-28 04:46:23'),
+(29, 14, 'The Bangladesh High Performance (HP) team ended the first day of the first four-day match against the Sri Lanka HP team on a high note, courtesy of an unbeaten 249-ball 124 from Nazmul Hossain Shanto, at the Sheikh Abu Naser Stadium in Khulna yesterday.', NULL, NULL, NULL, NULL, NULL, '2019-08-28 05:21:38', '2019-08-28 05:21:38'),
+(30, 14, 'Issue for bangladesh and dhaka city', NULL, NULL, NULL, NULL, NULL, '2019-08-29 05:21:21', '2019-08-29 05:21:21');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `issue_mark_delete`
+--
+
+DROP TABLE IF EXISTS `issue_mark_delete`;
+CREATE TABLE IF NOT EXISTS `issue_mark_delete` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(10) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `issueIdForIMD` (`issue_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `issue_mark_delete`
+--
+
+INSERT INTO `issue_mark_delete` (`id`, `user_id`, `issue_id`, `created_at`, `updated_at`) VALUES
+(3, 14, 30, '2019-08-29 09:42:08', '2019-08-29 09:42:08');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `issue_rating`
+--
+
+DROP TABLE IF EXISTS `issue_rating`;
+CREATE TABLE IF NOT EXISTS `issue_rating` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(10) UNSIGNED NOT NULL,
+  `rating` int(11) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `userIdForRating` (`user_id`),
+  KEY `issueIdForIR` (`issue_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `issue_rating`
+--
+
+INSERT INTO `issue_rating` (`id`, `user_id`, `issue_id`, `rating`, `created_at`, `updated_at`) VALUES
+(14, 14, 30, 5, '2019-08-29 08:16:21', '2019-08-29 08:16:21'),
+(15, 14, 28, 4, '2019-08-29 09:27:17', '2019-08-29 09:27:17');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `issue_recomm_junction`
+--
+
+DROP TABLE IF EXISTS `issue_recomm_junction`;
+CREATE TABLE IF NOT EXISTS `issue_recomm_junction` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `issue_id` int(11) UNSIGNED NOT NULL,
+  `recomm_id` int(11) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `issue_idForIRecommJ` (`issue_id`),
+  KEY `recomm_idForIRecommJ` (`recomm_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `issue_recomm_junction`
+--
+
+INSERT INTO `issue_recomm_junction` (`id`, `issue_id`, `recomm_id`, `created_at`, `updated_at`) VALUES
+(1, 28, 25, NULL, NULL),
+(3, 29, 20, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `issue_suggestion`
+--
+
+DROP TABLE IF EXISTS `issue_suggestion`;
+CREATE TABLE IF NOT EXISTS `issue_suggestion` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(10) UNSIGNED NOT NULL,
+  `content` text,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `useridForSuggestion` (`user_id`),
+  KEY `issueIdForSug` (`issue_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -286,31 +442,6 @@ INSERT INTO `locations` (`id`, `location_name`, `location_level`, `parent_id`, `
 (9, 'East Asia', 'Region Area', '10', 'Asia', 'Region', '38.7946', '106.5348', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (10, 'Asia', 'Region', '1', 'World', 'World', '34.0479', '100.6197', '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 (11, 'Africa', 'Region', '1', 'World', 'World', '8.7832', '34.5085', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mark_delete`
---
-
-DROP TABLE IF EXISTS `mark_delete`;
-CREATE TABLE IF NOT EXISTS `mark_delete` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `type_id` int(11) UNSIGNED NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `initIdForMarkDelte` (`type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `mark_delete`
---
-
-INSERT INTO `mark_delete` (`id`, `user_id`, `type_id`, `type`, `created_at`, `updated_at`) VALUES
-(1, 14, 23, 'issue', '2019-08-22 11:30:30', '2019-08-22 11:30:30');
 
 -- --------------------------------------------------------
 
@@ -448,40 +579,12 @@ INSERT INTO `project_indicator` (`id`, `project_id`, `indicator_value`, `title`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rating`
---
-
-DROP TABLE IF EXISTS `rating`;
-CREATE TABLE IF NOT EXISTS `rating` (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) UNSIGNED NOT NULL,
-  `type_id` int(11) NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `rating` int(11) NOT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `userIdForRating` (`user_id`),
-  KEY `initIdForRating` (`type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `rating`
---
-
-INSERT INTO `rating` (`id`, `user_id`, `type_id`, `type`, `rating`, `created_at`, `updated_at`) VALUES
-(12, 14, 23, 'issue', 5, '2019-08-22 10:39:06', '2019-08-22 10:39:06');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `recomm`
 --
 
 DROP TABLE IF EXISTS `recomm`;
 CREATE TABLE IF NOT EXISTS `recomm` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `issue_id` int(11) UNSIGNED DEFAULT NULL,
   `user_id` int(11) UNSIGNED DEFAULT NULL,
   `location_id` int(11) DEFAULT NULL,
   `recommendation` longtext,
@@ -496,36 +599,117 @@ CREATE TABLE IF NOT EXISTS `recomm` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `IssueIdForRecomm` (`issue_id`),
   KEY `UserIdForRecomm` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `recomm`
 --
 
-INSERT INTO `recomm` (`id`, `issue_id`, `user_id`, `location_id`, `recommendation`, `initiatives`, `ongoing_initiatives_detail`, `recommendation_detail`, `umbrella_recomm_id`, `recomm_impact_score`, `recomm_impact_category`, `recomm_ranking_within_region`, `recomm_popularity_count`, `created_at`, `updated_at`) VALUES
-(2, 4, 14, NULL, 'should become developed ', 'nothing', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '12', 'High', NULL, '14/234', '2018-10-02 16:30:24', '2018-10-02 16:30:24'),
-(3, 8, 16, NULL, 'More tourism advertisements', 'Red Cross', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '10', 'Medium', NULL, '144/334', '2018-10-09 06:34:30', '2018-10-09 06:34:30'),
-(4, 5, 16, NULL, 'Invite renewable energy companies', 'United Nations', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '100', 'Low', NULL, '24/134', '2018-10-09 06:47:15', '2018-10-09 06:47:15'),
-(5, 9, 16, NULL, 'Create more awareness for Fiverr', 'Fiverr', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '5', 'High', NULL, '140/234', '2018-10-12 14:01:42', '2018-10-12 14:01:42'),
-(6, 11, 14, NULL, 'no recommendation there are awesome', 'nothing', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '7', 'Low', NULL, '204/444', '2018-10-12 14:07:06', '2018-10-12 14:07:06'),
-(7, 14, 17, NULL, 'Vaccination', '', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '111', 'Medium', NULL, '204/444', '2018-11-03 16:12:18', '2018-11-03 16:12:18'),
-(8, 4, 14, NULL, 'test recommendation', 'test initiatives', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-30 12:11:31', '2018-12-30 12:11:31'),
-(9, 11, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', 'itself.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:10:56', '2018-12-31 09:10:56'),
-(10, 11, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', 'tableau server', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:07', '2018-12-31 09:11:07'),
-(11, 4, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', 'wanting to do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:16', '2018-12-31 09:11:16'),
-(12, 4, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:26', '2018-12-31 09:11:26'),
-(13, 3, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:38', '2018-12-31 09:11:38'),
-(14, 3, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:49', '2018-12-31 09:11:49'),
-(15, 11, 14, 0, 'test recomm', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-20 11:45:02', '2019-08-20 11:45:02'),
-(16, 16, 14, 4, 'test recomm', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-20 11:45:02', '2019-08-20 11:45:02'),
-(17, 4, 14, 0, 'Australia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after suffering concussion, Cricket Australia announced Tuesday.\r\n\r\nThe 30-year-old -- who has scored two centuries and 92 in his three innings in the first two Tests -- was felled by a Jofra Archer bouncer on Saturday in the first innings of the second Test at Lord’s.\r\n\r\n“Steve Smith has been ruled out of the third Ashes Test at Headingley, with coach Justin Langer confirming the news after the batsman sat out Australia’s training session on Tuesday,” Cricket Australia announced on their website.\r\n\r\nThe team doctor Richard Saw had the final say on whether Smith played or not and he was seen speaking with him during team training on Tuesday. According to the website vice-captain Pat Cummins patted Smith on the shoulder and coach Justin Langer wrapped his arm round the former captain as the rest of the squad trained without him.\r\n\r\nSmith, whose two centuries in the first Test were pivotal in Australia taking a 1-0 lead, returned t so bat on Saturday despite the blow to the side of the head that felled him. He added 12 runs before being out.\r\nAustralia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after sufferin sfjkfh hjkfhkf fhsdjk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 07:21:24', '2019-08-21 07:21:24'),
-(18, 16, 14, 4, 'Australia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after suffering concussion, Cricket Australia announced Tuesday.\r\n\r\nThe 30-year-old -- who has scored two centuries and 92 in his three innings in the first two Tests -- was felled by a Jofra Archer bouncer on Saturday in the first innings of the second Test at Lord’s.\r\n\r\n“Steve Smith has been ruled out of the third Ashes Test at Headingley, with coach Justin Langer confirming the news after the batsman sat out Australia’s training session on Tuesday,” Cricket Australia announced on their website.\r\n\r\nThe team doctor Richard Saw had the final say on whether Smith played or not and he was seen speaking with him during team training on Tuesday. According to the website vice-captain Pat Cummins patted Smith on the shoulder and coach Justin Langer wrapped his arm round the former captain as the rest of the squad trained without him.\r\n\r\nSmith, whose two centuries in the first Test were pivotal in Australia taking a 1-0 lead, returned t so bat on Saturday despite the blow to the side of the head that felled him. He added 12 runs before being out.\r\nAustralia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after sufferin sfjkfh hjkfhkf fhsdjk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 07:21:24', '2019-08-21 07:21:24'),
-(19, 18, 14, 8, 'Australia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after suffering concussion, Cricket Australia announced Tuesday.\r\n\r\nThe 30-year-old -- who has scored two centuries and 92 in his three innings in the first two Tests -- was felled by a Jofra Archer bouncer on Saturday in the first innings of the second Test at Lord’s.\r\n\r\n“Steve Smith has been ruled out of the third Ashes Test at Headingley, with coach Justin Langer confirming the news after the batsman sat out Australia’s training session on Tuesday,” Cricket Australia announced on their website.\r\n\r\nThe team doctor Richard Saw had the final say on whether Smith played or not and he was seen speaking with him during team training on Tuesday. According to the website vice-captain Pat Cummins patted Smith on the shoulder and coach Justin Langer wrapped his arm round the former captain as the rest of the squad trained without him.\r\n\r\nSmith, whose two centuries in the first Test were pivotal in Australia taking a 1-0 lead, returned t so bat on Saturday despite the blow to the side of the head that felled him. He added 12 runs before being out.\r\nAustralia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after sufferin sfjkfh hjkfhkf fhsdjk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 07:21:24', '2019-08-21 07:21:24'),
-(20, 17, 14, 1, 'test recomm added', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 09:56:48', '2019-08-21 09:56:48'),
-(21, 17, 14, 5, 'test recomm added', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 09:56:48', '2019-08-21 09:56:48'),
-(22, 17, 14, 8, 'test recomm added', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 09:56:48', '2019-08-21 09:56:48');
+INSERT INTO `recomm` (`id`, `user_id`, `location_id`, `recommendation`, `initiatives`, `ongoing_initiatives_detail`, `recommendation_detail`, `umbrella_recomm_id`, `recomm_impact_score`, `recomm_impact_category`, `recomm_ranking_within_region`, `recomm_popularity_count`, `created_at`, `updated_at`) VALUES
+(2, 14, NULL, 'should become developed ', 'nothing', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '12', 'High', NULL, '14/234', '2018-10-02 16:30:24', '2018-10-02 16:30:24'),
+(3, 16, NULL, 'More tourism advertisements', 'Red Cross', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '10', 'Medium', NULL, '144/334', '2018-10-09 06:34:30', '2018-10-09 06:34:30'),
+(4, 16, NULL, 'Invite renewable energy companies', 'United Nations', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '100', 'Low', NULL, '24/134', '2018-10-09 06:47:15', '2018-10-09 06:47:15'),
+(5, 16, NULL, 'Create more awareness for Fiverr', 'Fiverr', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '5', 'High', NULL, '140/234', '2018-10-12 14:01:42', '2018-10-12 14:01:42'),
+(6, 14, NULL, 'no recommendation there are awesome', 'nothing', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '7', 'Low', NULL, '204/444', '2018-10-12 14:07:06', '2018-10-12 14:07:06'),
+(7, 17, NULL, 'Vaccination', '', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s', NULL, '111', 'Medium', NULL, '204/444', '2018-11-03 16:12:18', '2018-11-03 16:12:18'),
+(8, 14, NULL, 'test recommendation', 'test initiatives', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-30 12:11:31', '2018-12-30 12:11:31'),
+(9, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', 'itself.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:10:56', '2018-12-31 09:10:56'),
+(10, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', 'tableau server', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:07', '2018-12-31 09:11:07'),
+(11, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', 'wanting to do', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:16', '2018-12-31 09:11:16'),
+(12, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:26', '2018-12-31 09:11:26'),
+(13, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:38', '2018-12-31 09:11:38'),
+(14, 14, NULL, 'You should look into Trusted Tickets. It does what you are wanting to do, but it requires some backend API call processing.\r\n\r\nYou also need access to set some settings on the tableau server itself.', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2018-12-31 09:11:49', '2018-12-31 09:11:49'),
+(15, 14, 0, 'test recomm', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-20 11:45:02', '2019-08-20 11:45:02'),
+(16, 14, 4, 'test recomm', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-20 11:45:02', '2019-08-20 11:45:02'),
+(17, 14, 0, 'Australia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after suffering concussion, Cricket Australia announced Tuesday.\r\n\r\nThe 30-year-old -- who has scored two centuries and 92 in his three innings in the first two Tests -- was felled by a Jofra Archer bouncer on Saturday in the first innings of the second Test at Lord’s.\r\n\r\n“Steve Smith has been ruled out of the third Ashes Test at Headingley, with coach Justin Langer confirming the news after the batsman sat out Australia’s training session on Tuesday,” Cricket Australia announced on their website.\r\n\r\nThe team doctor Richard Saw had the final say on whether Smith played or not and he was seen speaking with him during team training on Tuesday. According to the website vice-captain Pat Cummins patted Smith on the shoulder and coach Justin Langer wrapped his arm round the former captain as the rest of the squad trained without him.\r\n\r\nSmith, whose two centuries in the first Test were pivotal in Australia taking a 1-0 lead, returned t so bat on Saturday despite the blow to the side of the head that felled him. He added 12 runs before being out.\r\nAustralia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after sufferin sfjkfh hjkfhkf fhsdjk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 07:21:24', '2019-08-21 07:21:24'),
+(18, 14, 4, 'Australia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after suffering concussion, Cricket Australia announced Tuesday.\r\n\r\nThe 30-year-old -- who has scored two centuries and 92 in his three innings in the first two Tests -- was felled by a Jofra Archer bouncer on Saturday in the first innings of the second Test at Lord’s.\r\n\r\n“Steve Smith has been ruled out of the third Ashes Test at Headingley, with coach Justin Langer confirming the news after the batsman sat out Australia’s training session on Tuesday,” Cricket Australia announced on their website.\r\n\r\nThe team doctor Richard Saw had the final say on whether Smith played or not and he was seen speaking with him during team training on Tuesday. According to the website vice-captain Pat Cummins patted Smith on the shoulder and coach Justin Langer wrapped his arm round the former captain as the rest of the squad trained without him.\r\n\r\nSmith, whose two centuries in the first Test were pivotal in Australia taking a 1-0 lead, returned t so bat on Saturday despite the blow to the side of the head that felled him. He added 12 runs before being out.\r\nAustralia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after sufferin sfjkfh hjkfhkf fhsdjk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 07:21:24', '2019-08-21 07:21:24'),
+(19, 14, 8, 'Australia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after suffering concussion, Cricket Australia announced Tuesday.\r\n\r\nThe 30-year-old -- who has scored two centuries and 92 in his three innings in the first two Tests -- was felled by a Jofra Archer bouncer on Saturday in the first innings of the second Test at Lord’s.\r\n\r\n“Steve Smith has been ruled out of the third Ashes Test at Headingley, with coach Justin Langer confirming the news after the batsman sat out Australia’s training session on Tuesday,” Cricket Australia announced on their website.\r\n\r\nThe team doctor Richard Saw had the final say on whether Smith played or not and he was seen speaking with him during team training on Tuesday. According to the website vice-captain Pat Cummins patted Smith on the shoulder and coach Justin Langer wrapped his arm round the former captain as the rest of the squad trained without him.\r\n\r\nSmith, whose two centuries in the first Test were pivotal in Australia taking a 1-0 lead, returned t so bat on Saturday despite the blow to the side of the head that felled him. He added 12 runs before being out.\r\nAustralia’s star batsman Steve Smith has been ruled out of the third Ashes Test beginning on Thursday after sufferin sfjkfh hjkfhkf fhsdjk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 07:21:24', '2019-08-21 07:21:24'),
+(20, 14, 1, 'test recomm added', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 09:56:48', '2019-08-21 09:56:48'),
+(21, 14, 5, 'test recomm added', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 09:56:48', '2019-08-21 09:56:48'),
+(22, 14, 8, 'test recomm added', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-21 09:56:48', '2019-08-21 09:56:48'),
+(24, 14, NULL, 'save the children', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-28 06:46:54', '2019-08-28 06:46:54'),
+(25, 14, NULL, 'save the children', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-28 06:47:47', '2019-08-28 06:47:47'),
+(26, 14, NULL, 'india is a very big country, so there may have many issue . no solution', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-08-28 06:50:57', '2019-08-28 06:50:57');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recomm_init_junction`
+--
+
+DROP TABLE IF EXISTS `recomm_init_junction`;
+CREATE TABLE IF NOT EXISTS `recomm_init_junction` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `recomm_id` int(11) UNSIGNED NOT NULL,
+  `init_id` int(11) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `recomm_init_junction`
+--
+
+INSERT INTO `recomm_init_junction` (`id`, `recomm_id`, `init_id`, `created_at`, `updated_at`) VALUES
+(1, 11, 1, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recomm_mark_delete`
+--
+
+DROP TABLE IF EXISTS `recomm_mark_delete`;
+CREATE TABLE IF NOT EXISTS `recomm_mark_delete` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `recomm_id` int(10) UNSIGNED NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `recommIdForRMD` (`recomm_id`),
+  KEY `useridForRecomMD` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recomm_rating`
+--
+
+DROP TABLE IF EXISTS `recomm_rating`;
+CREATE TABLE IF NOT EXISTS `recomm_rating` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `recomm_id` int(10) UNSIGNED NOT NULL,
+  `rating` int(11) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `recommIdForRR` (`recomm_id`),
+  KEY `useridForRecomRating` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recomm_suggestion`
+--
+
+DROP TABLE IF EXISTS `recomm_suggestion`;
+CREATE TABLE IF NOT EXISTS `recomm_suggestion` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `recomm_id` int(10) UNSIGNED NOT NULL,
+  `content` text,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `recommIdForSug` (`recomm_id`),
+  KEY `useridForRecomSug` (`user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -570,6 +754,34 @@ INSERT INTO `regions` (`id`, `location_id`, `user_id`, `inform`, `criteria`, `sp
 (16, 2, 14, NULL, 'Issues', 0, '2019-08-19 08:19:31', '2019-08-19 08:19:31'),
 (17, 6, 14, NULL, 'Issues', 0, '2019-08-19 08:19:31', '2019-08-19 08:19:31'),
 (18, 8, 14, NULL, NULL, 1, '2019-08-19 08:44:48', '2019-08-19 08:44:48');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `region_issue_junction`
+--
+
+DROP TABLE IF EXISTS `region_issue_junction`;
+CREATE TABLE IF NOT EXISTS `region_issue_junction` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `region_id` int(11) UNSIGNED NOT NULL,
+  `issue_id` int(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `regionIForRIJ` (`region_id`),
+  KEY `issueIForRIJ` (`issue_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `region_issue_junction`
+--
+
+INSERT INTO `region_issue_junction` (`id`, `region_id`, `issue_id`) VALUES
+(1, 4, 28),
+(2, 6, 28),
+(3, 7, 29),
+(4, 2, 30),
+(5, 8, 30),
+(6, 2, 30);
 
 -- --------------------------------------------------------
 
@@ -776,8 +988,13 @@ ALTER TABLE `interests`
 -- Constraints for table `issues`
 --
 ALTER TABLE `issues`
-  ADD CONSTRAINT `UserIdForIssue` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `regionsIdForissue` FOREIGN KEY (`region_id`) REFERENCES `regions` (`id`);
+  ADD CONSTRAINT `UserIdForIssue` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `issue_rating`
+--
+ALTER TABLE `issue_rating`
+  ADD CONSTRAINT `issueIdForIR` FOREIGN KEY (`issue_id`) REFERENCES `issues` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `payments`
@@ -795,7 +1012,6 @@ ALTER TABLE `project_indicator`
 -- Constraints for table `recomm`
 --
 ALTER TABLE `recomm`
-  ADD CONSTRAINT `IssueIdForRecomm` FOREIGN KEY (`issue_id`) REFERENCES `issues` (`id`),
   ADD CONSTRAINT `UserIdForRecomm` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --

@@ -76,13 +76,15 @@ Route::group([],function(){
 Route::group([],function(){
 	Route::post('/your-region',"IssueCtrl@yourRegion")->name('yourRegion');
 	Route::post('/specific-region',"IssueCtrl@specificRegion")->name('specificRegion');
-	Route::post('/check-duplicate-issue/{content}',"IssueCtrl@checkDuplicateIssue")->name('checkDuplicateIssue');
+	Route::post('/check-duplicate-issue',"IssueCtrl@checkDuplicateIssue")->name('checkDuplicateIssue');
 	Route::post('/getissue-for-region',"IssueCtrl@getIssueForRegion")->name("getIssueForRegion");
 	Route::post('/save-issue', "IssueCtrl@saveIssue")->name('saveIssue');
 	Route::post('/update-issue', "IssueCtrl@updateIssue")->name('updateIssue');
 	Route::get('/delete-issue/{id}', "IssueCtrl@deleteIssue")->name('deleteIssue')->where('id','[0-9]+');
 
-	Route::get('/issue-mark-delete/{type_id}/{name}', "IssueCtrl@markDelete")->name('markDelete')->where('id','[0-9]+');
+	Route::get('/issue-mark-delete/{type_id}', "IssueCtrl@markDelete")->name('markDelete')->where('id','[0-9]+');
+
+	Route::post('/issue-suggestion', "IssueCtrl@issueSuggestion")->name('issueSuggestion');
 
 });
 //Service management ende
@@ -93,27 +95,44 @@ Route::group([],function(){
 	Route::post('/check-duplicate-recomm',"RecommCtrl@checkDuplicateRecomm")->name('checkDuplicateRecomm');
 
 	Route::post('/specific-recommendation',"RecommCtrl@specRecomm")->name('specRecomm');
-	
+	Route::post('/getrecommbyissueid',"RecommCtrl@getRecommByIssue")->name('getRecommByIssue');
+
 	Route::post('/save-recommendation', "RecommCtrl@saveRecomm")->name('saveRecomm');
 	Route::post('/save-recommendation-for-specific-issue', "RecommCtrl@saveSpecIssueRecomm")->name('saveSpecIssueRecomm');
+	Route::post('/save-offer-recommendation', "RecommCtrl@saveOfferRecomm")->name('saveOfferRecomm');
 
 	Route::post('/update-recommendation', "RecommCtrl@updateRecomm")->name('updateRecomm');
 
 	Route::get('/delete-recommendation/{id}', "RecommCtrl@deleteRecomm")->name('deleteRecomm')->where('id','[0-9]+');
+	//offer recomm for a particular issue
+	Route::get('/offer-recommendation/{issue_id}',"RecommCtrl@offerRecomm")->name('offerRecomm')->where('id','[0-9]+');
+
+	Route::get('/recommendation-mark-delete/{type_id}', "RecommCtrl@markDelete")->name('recommMarkDelete')->where('id','[0-9]+');
+	Route::post('/recommendation-suggestion', "RecommCtrl@recommSuggestion")->name('issueSuggestion');	
 
 });
 //recommendation management end
 
 //initiatives management start
 Route::group([],function(){
-	Route::get('/initiatives',"Initiatives@getRecomm")->name('getInitiative');
+	Route::post('/initiatives',"InitiativesCtrl@getInitiative")->name('getInitiative');
 	
-	Route::post('/save-recommendation', "RecommCtrl@saveRecomm")->name('saveRecomm');
+	Route::post('/save-initiatives', "InitiativesCtrl@saveInit")->name('saveInit');
 
-	Route::post('/update-recommendation', "RecommCtrl@updateRecomm")->name('updateRecomm');
+	Route::post('/save-offer-initiatives', "InitiativesCtrl@saveOfferInit")->name('saveOfferInit');
 
-	Route::get('/delete-recommendation/{id}', "RecommCtrl@deleteRecomm")->name('deleteRecomm')->where('id','[0-9]+');
+	Route::post('/check-duplicate-initiatives',"InitiativesCtrl@checkDuplicateInit")->name('checkDuplicateRecomm');
 
+	Route::post('/update-recommendation', "InitiativesCtrl@updateRecomm")->name('updateRecomm');
+
+	Route::get('/delete-recommendation/{id}', "InitiativesCtrl@deleteRecomm")->name('deleteRecomm')->where('id','[0-9]+');
+
+	Route::get('/offer-initiatives/{recomm_id}',"InitiativesCtrl@offerInit")->name('offerInit')->where('id','[0-9]+');
+
+
+	Route::get('/initiatives-mark-delete/{type_id}', "InitiativesCtrl@markDelete")->name('markDelete')->where('id','[0-9]+');
+
+	Route::post('/initiatives-suggestion', "InitiativesCtrl@initSuggestion")->name('initSuggestion');	
 });
 //initiatives management end
 
@@ -181,6 +200,8 @@ Route::group([],function(){
 //rating routes for users
 Route::group([''], function(){
 
-	Route::post('/post-rating',"RatingCtrl@createRating")->name('createRating');
+	Route::post('/issue-rating',"RatingCtrl@createIssueRating")->name('issueRating');
+	Route::post('/recommendation-rating',"RatingCtrl@createRecommRating")->name('recommRating');
+	Route::post('/initiatives-rating',"RatingCtrl@createInitRating")->name('initRating');
 });
 //rating routes end

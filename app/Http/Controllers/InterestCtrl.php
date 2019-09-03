@@ -107,4 +107,17 @@ class InterestCtrl extends Controller
             }
     }
 
+    function lastWeekInterest(){
+        $q= DB::select(DB::raw("
+            SELECT id FROM interests
+            WHERE created_at >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+            AND created_at < curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY
+        "));
+
+        $total= count($q);
+        $parcent=2;
+        $lastWeek= ($total*$parcent)/100;
+        return $lastWeek;
+    }
+
 }

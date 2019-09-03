@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use admin\Locations;
 use admin\Regions;
 use admin\Issues;
+use admin\RegionIssueJunction;
 
 
 
@@ -140,4 +141,26 @@ class RegionsCtrl extends Controller
                     ";                
             }
     }
+    //getting region name by issue id
+    function getRegionByIssueId($issue_id){
+        $q= RegionIssueJunction::select('l.location_name')
+                ->join('locations as l','l.id','=','region_issue_junction.region_id')
+                ->where('region_issue_junction.issue_id',$issue_id)
+                ->get();
+        return $q;       
+    }
+
+    function lastWeekRegion(){
+        $q= DB::select(DB::raw("
+            SELECT id FROM regions
+            WHERE created_at >= curdate() - INTERVAL DAYOFWEEK(curdate())+6 DAY
+            AND created_at < curdate() - INTERVAL DAYOFWEEK(curdate())-1 DAY
+        "));
+
+        $total= count($q);
+        $parcent=3.5;
+        $lastWeek= ($total*$parcent)/100;
+        return $lastWeek;
+    }
+
 }

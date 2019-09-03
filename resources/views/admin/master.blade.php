@@ -93,6 +93,9 @@
   .active-thumb{
     color: green;
   }
+  .help-block{
+    color:#ee4646 !important;
+  }
 
 /*medium=>*/
 @media only screen and (min-width: 920px){

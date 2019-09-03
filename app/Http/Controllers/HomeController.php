@@ -3,6 +3,9 @@
 namespace admin\Http\Controllers;
 use admin\Http\Controllers\InterestCtrl;
 use admin\Http\Controllers\RegionsCtrl;
+use admin\Http\Controllers\InitiativesCtrl;
+use admin\Http\Controllers\IssueCtrl;
+use admin\Http\Controllers\RecommCtrl;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -47,8 +50,23 @@ class HomeController extends Controller
         $region= new RegionsCtrl;
         $issue= new IssueCtrl;
         $recomm= new RecommCtrl;
+        $initiatives= new InitiativesCtrl;
 
-        return view('users/dashboard')->with(['title'=>$title,'interests'=>$interest->getAllInterest(),'locations'=>$region->getAllLocations(),'userRegion'=>$region->getUserLocation(),'userIssue'=>$issue->getUserIssue($user_id),'allIssue'=>$issue->getAllIssues(),'userRecomm'=>$recomm->getUserRecomm($user_id)]);
+        return view('users/dashboard')->with(
+            [
+                'title'=>$title,
+                'interests'=>$interest->getAllInterest(),
+                'locations'=>$region->getAllLocations(),
+                'userRegion'=>$region->getUserLocation(),
+                'userIssue'=>$issue->getUserIssue($user_id),
+                'allIssue'=>$issue->getAllIssues(),
+                'userRecomm'=>$recomm->getUserRecomm($user_id),
+                'lastWeekInterest'=>$interest->lastWeekInterest(),
+                'lastWeekRegion'=>$region->lastWeekRegion(),
+                'lastWeekIssue'=>$issue->lastWeekIssue(),
+                'lastWeekRecomm'=>$recomm->lastWeekRecomm(),
+                'lastWeekInitiatives'=>$initiatives->lastWeekInitiatives()
+        ]);
     }
 
     function workLog(){

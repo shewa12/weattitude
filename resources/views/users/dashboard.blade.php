@@ -35,28 +35,28 @@
 
             <div class="col-md-2 col-sm-4 col-xs-5 tile_stats_count" data-toggle="modal" data-target="#addSkills">
               <span class="count_top">Interest</span>
-              <div class="count">123.50</div>
-              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last Week</span>
+              <div class="count">{{$lastWeekInterest}}</div>
+              <span class="count_bottom"><i class="green">2% </i> From last Week</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-5 tile_stats_count" data-toggle="modal" data-target="#addRegions">
               <span class="count_top"> Regions</span>
-              <div class="count green">2,500</div>
-              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+              <div class="count green">{{$lastWeekRegion}}</div>
+              <span class="count_bottom"><i class="green">3.5% </i> From last Week</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-5 tile_stats_count" data-toggle="modal" data-target="#addIssues">
               <span class="count_top"> Issues</span>
-              <div class="count">4,567</div>
-              <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>
+              <div class="count">{{$lastWeekIssue}}</div>
+              <span class="count_bottom"><i class="red">1% </i> From last Week</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-5 tile_stats_count" data-toggle="modal" data-target="#addRecommendations">
               <span class="count_top"> Recommendations</span>
-              <div class="count">2,315</div>
-              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+              <div class="count">{{$lastWeekRecomm}}</div>
+              <span class="count_bottom"><i class="green">2% </i> From last Week</span>
             </div>
             <div class="col-md-2 col-sm-4 col-xs-5 tile_stats_count" data-toggle="modal" data-target="#addInitiatives">
               <span class="count_top"> Ongoing Initiatives</span>
-              <div class="count">7,325</div>
-              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
+              <div class="count">{{$lastWeekInitiatives}}</div>
+              <span class="count_bottom"><i class="green">3% </i> From last Week</span>
             </div>
           </div>
           <!-- /top tiles -->
@@ -386,7 +386,7 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                   <div class="x_panel">
                     <div class="x_title">
-                      <h2>Visitors location <small>geo-presentation</small></h2>
+                      <h2>Your Regions of Interest and Available Issues</h2>
                       <ul class="nav navbar-right panel_toolbox">
                         <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                         </li>
@@ -407,7 +407,7 @@
                     <div class="x_content">
                       <div class="dashboard-widget-content">
                         <div class="col-md-4 hidden-small">
-                          <h2 class="line_30">125.7k Views from 60 countries</h2>
+                          
 
                           <table class="countries_list">
                             <tbody>
@@ -893,7 +893,7 @@
 
                           <div class="form-group">
                             <label for="select-state">Select Interest/Hobby/Job</label>
-                            <select id="select-state" name="interest[]" multiple class="demo-default"   placeholder="Type here...">
+                            <select id="select-state" name="interest[]" multiple class="demo-default"   placeholder="Type here..." required>
                               <option value="">Search Here...</option>
                                 @forelse($interests as $value)
                                 <option value="{{$value->id}}">{{$value->interest}}</option>
@@ -964,7 +964,7 @@
                         <div class="demo">
                           <div class="form-group">
                           
-                            <select id="select-region" name="locations[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)">
+                            <select id="select-region" name="locations[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)" required>
                               <option value="">Type Here...(You can select multiple)</option>
                                 @forelse($locations as $value)
                                 <option value="{{$value->id}}">{{$value->location_name}}</option>
@@ -995,7 +995,7 @@
                         <div class="demo">
                           <div class="form-group">
                           
-                            <select id="select-spec-region" name="locations[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)">
+                            <select id="select-spec-region" name="locations[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)" required>
                               <option value="">Type Here...(You can select multiple)</option>
                                 @forelse($locations as $value)
                                 <option value="{{$value->id}}">{{$value->location_name}}</option>
@@ -1072,7 +1072,7 @@
                         <div class="demo">
                           <div class="form-group">
                             <label>Select specific regions</label>
-                            <select id="all-region" name="locations[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)">
+                            <select id="all-region" name="locations[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)" required>
                               <option value="">Type Here...(You can select multiple)</option>
                                 @forelse($locations as $value)
                                 <option value="{{$value->id}}">{{$value->location_name}}</option>
@@ -1125,7 +1125,7 @@
                               <option value="">Type Here...(You can select multiple)</option>
                                 @forelse($userIssue as $ui)
                                 <option value="{{$ui->id}}">
-                                  <?php echo substr($ui->content,0,100)."...";?>
+                                  (Region: {{$ui->location_name}}) <?php echo substr($ui->content,0,100)."...";?>
                                 </option>
                                 @empty
                                 <option value="">No issue found</option>
@@ -1151,11 +1151,15 @@
 
                         <div class="demo">
                           <div class="form-group">
-                            <label>Select specific regions</label>
-                            <select id="all-region-issue" name="region_id[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)">
+                            <label>Select specific issues</label>
+                            <select id="all-region-issue" name="specific_issue[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)"  required>
                               <option value="">Type Here...(You can select multiple)</option>
-                                @forelse($locations as $value)
-                                <option value="{{$value->id}}">{{$value->location_name}}</option>
+                                @forelse($allIssue as $ai)
+                                <option value="{{$ai->id}}">
+                                  (Region: {{$ai->location_name}} )<?php 
+                                    echo substr($ai->content, 0,100)."...";
+                                  ?>
+                                </option>
                                 @empty
 
                                 @endforelse
@@ -1168,17 +1172,7 @@
                           </script>
                         </div>          
 
-          <div class="form-group">
-            <label>Search specific issue</label>
-            <select class="form-control" id="specIssueRes" name="issue_id">
-              
-              <input name="specific_issue" class="form-control" placeholder="Type here..." id="matchSpecIssue">
-              
-            </select>
-            
 
-            <span class="help-text" id="spec-issue-error"></span>
-          </div>
                   
           <div class="form-group">
             <button href="{{route('saveSpecIssueRecomm')}}" class="btn-primary btn" id="specIssueBtn">Next</button>
@@ -1206,13 +1200,13 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="post" action="{{route('saveLocation')}}" enctype="multipart/form-data">
+        <form method="post" action="{{route('getInitiative')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
             
                         <div class="demo">
                           <div class="form-group">
                             <label>Select From Solutions You Listed</label>
-                            <select id="user-recomm" name="recomm_id[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)">
+                            <select id="user-recomm" name="recomm_id[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)" required>
                               <option value="">Type Here...(You can select multiple)</option>
                                 @forelse($userRecomm as $userR)
                                 <option value="{{$value->id}}">{{$userR->recommendation}}</option>
@@ -1235,26 +1229,48 @@
         <div class="clearfix"></div>
         <center><h3>OR</h3></center>
 <!--specific regions -->
-        <form method="post" action="{{route('saveLocation')}}" enctype="multipart/form-data">
+        <form method="post" action="{{route('getInitiative')}}" enctype="multipart/form-data">
               {{ csrf_field() }}
 
-          <div class="form-group">
-            <label>Select specific regions</label>
-            <input class="form-control" onkeyup="getLocations()" id="search" placeholder="Type here...(you can select multiple)">
-          </div>          
+<!--spec issue and recom for init-->        
+                        <div class="demo">
+                          <div class="form-group">
+                          
+                            <select onChange="getRecommByIssueId()" id="select-spec-isse-init" name="issue_id[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)" required>
+                              <option value="">Type Here...(You can select multiple)</option>
 
-          <div class="form-group">
-            <label>Select specific issues</label>
-            <input class="form-control" onkeyup="getLocations()" id="search" placeholder="Type here...(you can select multiple)">
-          </div>          
+                                @forelse($allIssue as $issueInit)
 
-          <div class="form-group">
-            <label>Select specific solutions</label>
-            <input class="form-control" onkeyup="getLocations()" id="search" placeholder="Type here...(you can select multiple)">
-          </div>
+                                <option value="{{$issueInit->id}}">(Region: {{$issueInit->location_name}}) <?php echo substr($issueInit->content,0,100);?></option>
+                                @empty
+                                <option>No record found</option>
+                                @endforelse
+                            </select>
+                          </div>
+                          <script>
+                          $('#select-spec-isse-init').selectize({
+                            maxItems: 30
+                          });
+                          </script>
+                        </div>         
+
+                        <div class="demo">
+                          <div class="form-group">
+                          
+                            <select id="select-spec-sol-init" name="recomm_id[]" multiple class="demo-default"   placeholder="Type here...(You can select multiple)" required>
+                              <option value="">Type Here...(You can select multiple)</option>
+                            </select>
+                          </div>
+                          <script>
+                          $('#select-spec-sol-init').selectize({
+                            maxItems: 30
+                          });
+                          </script>
+                        </div>  
+<!-- spec issue and recom for int end-->
                   
           <div class="form-group">
-            <a href="{{route('getInitiative')}}" class="btn-primary btn" id="save">Next</a>
+            <button class="btn-primary btn" id="save">Next</button>
           </div>
         </form>        
 <!--specific regions end-->        
@@ -1268,25 +1284,17 @@
 </div>
 <!--modal for addInitiatives end-->   
 <!--all modals end-->
+
 </div><!--right col end-->
 @endsection
 
 @section('js')
 <script type="text/javascript">
   $("#matchSpecIssue").on("keyup", function(){
-/*
-    var region= $('#all-region-issue').selectize({
-             onInitialize: function (selectize) {
-                selectize.on('change', function (value) {
-                     var item = this.$input[0];
-                     var selected_text = $(item.selectize.getItem(value)[0]).text();
-                  });
-            }
-     });
-*/  
+
     var region=[];
-        $.each($("#all-region-issue option:selected"), function(){            
-            region.push($(this).val());
+        $.each($("#all-region-issue option:selected"), function(){ 
+          region.push($(this).val());
         });
     
     var content= $(this).val();
@@ -1317,5 +1325,48 @@
       });
       
   })
+
+//get recomm by issue id  
+    function getRecommByIssueId(){
+        var recomm=[]; 
+        var issue_id=[];
+        $.each($("#select-spec-isse-init option:selected"), function(){
+            issue_id.push($(this).val());
+        });
+        var token = $('meta[name="csrf-token"]').attr('content');
+        var dataString= {
+          _token:token,
+          issue_id:issue_id
+        };
+        if(issue_id.length>0){
+            $.ajax({
+
+              url: "<?php echo url('getrecommbyissueid')?>",            
+              type: "POST",
+              data: dataString,
+              dataType: "JSON",
+              success: function(data)
+              {
+                console.log(data);
+                recomm.push(data);
+                var selectize = $("#select-spec-sol-init")[0].selectize;
+                selectize.clear();
+                selectize.clearOptions();
+                selectize.load(function(callback) {
+                    callback(recomm);
+                });    
+                        
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                 
+                  console.log('Error getting recomm by issue');
+              }
+          }); 
+
+        }
+        
+  }  
+//get recomm by issue id end  
 </script>
 @endsection

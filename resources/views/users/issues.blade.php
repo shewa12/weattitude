@@ -66,13 +66,13 @@
           <i class="fas fa-th-list toggle-icon dropdown-toggle"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="cursor:pointer"></i>
 
         <ul class="dropdown-menu">
-          <li><a href="#"class="rating"  data-target="#addRating" id="{{$value->id}}" data-toggle="modal">Give Rating</a></li>
+          <li><a class="rating"  data-target="#addRating" id="{{$value->id}}" data-toggle="modal">Give Rating</a></li>
           
-          <li><a href="#" class="mark_delete" id="{{$value->id}}">Mark for Delete</a></li>
+          <li><a class="mark_delete" id="{{$value->id}}">Mark for Delete</a></li>
           
-          <li><a href="#">Suggest to Rename</a></li>
+          <li><a class="addIssueForSug" id="{{$value->id}}" data-toggle="modal" data-target="#addSuggest">Suggest to Rename</a></li>
           
-          <li><a href="#">Offer Recommendation</a></li>
+          <li><a href="{{url('offer-recommendation')}}/{{$value->id}}">Offer Recommendation</a></li>
 
           <li><a href="#">Offer for OR Against Remark</a></li>
         </ul>
@@ -131,7 +131,7 @@
 </div>
 <!--modal for add end-->   
 
-<!--edit form--> 
+<!--ratting form--> 
 
 <div class="modal fade" id="addRating" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -143,7 +143,7 @@
         </button>
       </div>
       <div class="modal-body" style="text-align:center;font-size:25px;">
-        <form method="post" action="{{route('createRating')}}" enctype="multipart/form-data">
+        <form method="post" action="" enctype="multipart/form-data">
               {{ csrf_field() }}
           <input type="hidden" name="type_id">
           <input type="hidden" name="type" value="issue">
@@ -168,6 +168,37 @@
   </div>
 </div>
 <!--edit form end--> 
+<!--suggest to rename-->
+
+<div class="modal fade" id="addSuggest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Suggest to new name</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" >
+        <form method="post" action="" enctype="multipart/form-data">
+              {{ csrf_field() }}
+              <input type="hidden" id="" name="setIssueIdForSug">
+              <div class="form-group">
+                <label>Enter new name suggestion</label>
+                <textarea class="form-control" name="issue_suggestion"></textarea>
+             </div>
+             <div class="form-group">
+               <button type="button" onClick="issueSuggestion()" class="btn btn-primary">Submit</button>
+             </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--suggest to rename end-->
 	</div><!--main  col div end-->
 @endsection
 
@@ -224,7 +255,7 @@
         if(content !==''){
             $.ajax({
 
-              url: "<?php echo url('check-duplicate-issue')?>"+'/'+content,            
+              url: "<?php echo url('check-duplicate-issue')?>",            
               type: "POST",
               data: dataString,
               dataType: "HTML",
@@ -247,6 +278,7 @@
                   console.log('Error matching duplicate data');
               }
           }); 
+            
         } //endif        
       }
       function countMatch(content){
@@ -263,6 +295,7 @@
         }
       }
       //count match end
+
       //rating
       var rating;
 
@@ -272,19 +305,18 @@
           $(".fa-thumbs-up").removeClass('shake');
           $(this).addClass('active-thumb shake');
 
-          var type= $('[name="type"]').val();
           var typeId= $('[name="type_id"]').val();
           var csrf_token= $('meta[name="csrf-token"]').attr('content');
           var dataString= {
             _token:csrf_token,
-            type:type,
+            
             type_id:typeId,
             rating:rating
           };
 
             $.ajax({
 
-              url:"<?php echo url('/post-rating')?>",            
+              url:"<?php echo url('/issue-rating')?>",            
               type: "POST",
               data:dataString,
               dataType: "HTML",
@@ -313,6 +345,7 @@
 
       });//function close
       //rating end
+
       //set issue id
       $(".rating").click(function(){
         $(".fa-thumbs-up").removeClass('active-thumb shake');
@@ -323,10 +356,10 @@
 
       $(".mark_delete").on('click',function(){
             var issue_id= $(this).attr('id');
-            var name="issue";
+            
             $.ajax({
 
-              url:"<?php echo url('/issue-mark-delete')?>"+'/'+issue_id+'/'+name,            
+              url:"<?php echo url('/issue-mark-delete')?>"+'/'+issue_id,            
               type: "GET",
              
               dataType: "HTML",
@@ -341,5 +374,50 @@
               }
           });
       });
+      //issue suggestion
+          function issueSuggestion(){
+          var issue_id= $("[name='setIssueIdForSug']").val();
+          var issue_suggest= $('[name="issue_suggestion"]').val();
+          var csrf_token= $('meta[name="csrf-token"]').attr('content');
+          var dataString= {
+            _token:csrf_token,
+            issue_id:issue_id,
+            issue_suggest:issue_suggest
+
+          };
+            $.ajax({
+
+              url:"<?php echo url('/issue-suggestion')?>",            
+              type: "POST",
+              data:dataString,
+              dataType: "HTML",
+              success: function(data)
+              {
+                if(data=="exists"){
+                    alert("You have already submited suggestion!");
+                    $("[name='issue_suggestion']").empty();
+                    return ;
+                }
+                else{
+                  $("[name='issue_suggestion']").empty();  
+                  alert("Suggestion  submitted!");
+                 
+                                
+                }
+
+              },
+              error: function (jqXHR, textStatus, errorThrown)
+              {
+                  console.log('Error posting suggestion');
+              }
+          });
+
+      }
+
+      $('.addIssueForSug').on('click',function(){
+          var issue_id= $(this).attr('id');
+          $('[name="setIssueIdForSug"]').val(issue_id);
+      });
+
   </script>
 @endsection
